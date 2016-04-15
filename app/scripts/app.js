@@ -54,10 +54,6 @@
 
     // Player
     $PLAYER.drawPlayer(csv, avatar);
-
-    // csv.drawImage(avatar, 0, 0, 55, 64,
-    //   screenWidth/2, screenHeight/2,
-    //   60, 60);
   }
 
   function animationLoop() {
