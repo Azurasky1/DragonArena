@@ -3,11 +3,77 @@
   <head>
     <meta charset="utf-8">
     <title>2dgame</title>
+    <link rel="stylesheet" href="styles/store.css">
     <link rel="stylesheet" href="styles/main.css">
   </head>
   <body>
     <canvas id="canvas"></canvas>
 
+    <div id="store">
+      <span id="store-toggle">x toggle</span>
+      <h5>Welcome to the store!</h5>
+      <div class="storeitem" id="item1">
+        <img class="storeimg" src="images/store/syriesbow80px.png">
+      </div>
+      <div class="storeitem" id="item2">
+        <img class="storeimg" src="images/store/classes50px1.png" />
+      </div>
+      <div class="storeitem" id="item3">
+        <img class="storeimg" id="syriesbow" src="images/store/syriesbow1.png">
+      </div>
+
+      <div class="quickinfo">
+      		<img class="classsprite" src="images/store/resizedclasscaster.png" /><!-- missing image -->
+      </div>
+
+      <div class="quickinfo" id="levelquickinfo">
+      LVL: 100
+      </div>
+      <div class="quickinfo" id="currencyquickinfo">
+      Cost: 100
+      <!-- <img src="images/store/currency.png" id="currencysprite" />
+      come back to this later -->
+      </div>
+
+      <div class="quickinfo">
+      		<img id="classsprite2" src="images/store/resizedclasscaster.png" /><!-- missing image -->
+      </div>
+      <div class="quickinfo" id="levelquickinfo3"> LVL: 100</div>
+      <div class="quickinfo" id="currencyquickinfo3"> Cost: 100 </div>
+
+      <div class="quickinfo">
+      		<img id="classsprite" src="images/store/resizedclasscaster.png" /><!-- missing image -->
+      </div>
+      <div class="quickinfo" id="levelquickinfo2"> LVL: 100 </div>
+      <div class="quickinfo" id="currencyquickinfo2"> Cost: 100 </div>
+      <p id="box1name"> Syries' Magic Bow </p>
+      <p id="box3name"> Syries' Magic Arrow </p>
+      <p id="box2name"> Gladiator Sword </p>
+
+      <p id="balance"></p>
+      <button id="buyitem1" onclick="purchaseItem(syriesMagicBow)">Buy</button>
+      <button id="buyitem2" onclick="purchaseItem(syriesMagicArrow)">Buy</button>
+      <button id="buyitem3" onclick="purchaseItem(gladiatorSword)">Buy</button>
+      <button id="sellitem1" onclick="sellItem(syriesMagicBow)">Sell</button>
+      <button id="sellitem2" onclick="sellItem(syriesMagicArrow)">Sell</button>
+      <button id="sellitem3" onclick="sellItem(gladiatorSword)">Sell</button>
+
+      <p id="shopNotice"></p>
+      <!-- change the balance id value above using innerHTML when user buys an item -->
+
+      <h6>Filter by:</h6>
+      <div class="filterbutton" id="class">
+        <img class="filterimg" src="images/store/resizedclasscaster.png" /><!-- missing image -->
+      </div>
+      <div class="filterbutton" id="level">
+        <p id="levelfilter"> LV. </p>
+      </div>
+      <div class="filterbutton" id="cost">
+        <img class="filterimg "src="images/store/currency.png" /><!-- missing image -->
+      </div>
+    </div>
+
+    <script src="scripts/store.js"></script>
     <script src="scripts/modules/game.js"></script>
     <script src="scripts/app.js"></script>
   </body>
