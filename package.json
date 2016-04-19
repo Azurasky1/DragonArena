@@ -1,0 +1,26 @@
+{
+  "name": "2dgame",
+  "version": "1.0.0",
+  "description": "Creating a 2d game with html5 and VanillaJS.",
+  "main": "app/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azurasky1/2dgame.git"
+  },
+  "author": "Azurasky1",
+  "contributors": [
+    "andreasonny83 <andreasonny83@gmail.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Azurasky1/2dgame/issues"
+  },
+  "homepage": "https://github.com/Azurasky1/2dgame#readme",
+  "devDependencies": {
+    "browser-sync": "^2.12.3",
+    "gulp": "^3.9.1"
+  }
+}
