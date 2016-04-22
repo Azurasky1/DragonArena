@@ -21,3 +21,20 @@ body {
 #canvas {
     display: block;
 }
+
+.container {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+  align-items: stretch;
+}
+
+.flex1 {
+  flex: 1;
+}
+.flex2 {
+  flex: 2;
+}

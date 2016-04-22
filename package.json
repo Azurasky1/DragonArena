@@ -21,6 +21,9 @@
   "homepage": "https://github.com/Azurasky1/2dgame#readme",
   "devDependencies": {
     "browser-sync": "^2.12.3",
-    "gulp": "^3.9.1"
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.1",
+    "run-sequence": "^1.1.5"
   }
 }
