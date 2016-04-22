@@ -25,15 +25,15 @@
   position: fixed;
   padding: 5px 10px;
   border-radius: 3px;
-  bottom: -30px;
+  bottom: -35px;
   left: 50%;
   margin-left: -250px;
   opacity: 0;
-  transition: transform 1s linear, opacity .2s linear;
+  transition: transform .8s ease-out .5s, opacity .2s linear;
 }
 
 #store__show.show {
-  transform: translateY(-35px);
+  transform: translateY(-40px);
   opacity: 1;
 }
 
