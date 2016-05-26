@@ -2,14 +2,22 @@ var shop = [];
 var shopNotice = document.getElementById("shopNotice");
 var balance = document.getElementById("balance");
 var store = document.getElementById("store");
-var toggleStore = document.getElementById("store-toggle");
+var toggleStore = document.getElementById("store__toggle");
+var showStore = document.getElementById("store__show");
 var check;
 
-function toggleStoreToggle() {
-  store.classList.toggle('hidden');
+function hideStoreToggle() {
+  store.classList.add('hidden');
+  showStore.classList.add('show');
 }
 
-toggleStore.addEventListener('click', toggleStoreToggle);
+function showStoreToggle() {
+  store.classList.remove('hidden');
+  showStore.classList.remove('show');
+}
+
+toggleStore.addEventListener('click', hideStoreToggle);
+showStore.addEventListener('click', showStoreToggle);
 
 /*
 

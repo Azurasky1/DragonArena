@@ -26,7 +26,7 @@ Then navigate inside your project directory and run:
 Once you have all the dependencies install, open a terminal window,
 navigate inside your local copy of this repository. Then run:
 
-    gulp
+    gulp watch
 
 This will initialize the client application and will trigger your browser to open the served URL.
 Start editing your source files and you will see your changing appearing in real time inside your browser.
