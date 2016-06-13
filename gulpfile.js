@@ -31,14 +31,14 @@ function copyFiles() {
 }
 
 function sassDev() {
-  return gulp.src('./app/sass/**/*.scss')
+  return gulp.src('./app/styles/**/*.scss')
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('./.tmp/styles'));
 }
 
 function watchFiles() {
   gulp.watch(['./app/*.html'], ['copy:files', browserSync.reload]);
-  gulp.watch(['./app/sass/*.scss'], ['sass:dev', browserSync.reload]);
+  gulp.watch(['./app/styles/*.scss'], ['sass:dev', browserSync.reload]);
   gulp.watch(['./app/scripts/**/*.js'], ['copy:files', browserSync.reload]);
 }
 
@@ -49,10 +49,10 @@ gulp.task('copy:files', copyFiles);
 gulp.task('watch:files', watchFiles);
 gulp.task('watch', ['default', 'watch:files']);
 
-gulp.task('default', function(callback) {
+gulp.task('default', ['clean'], function(callback) {
   runSequence(
-    'clean',
-    ['copy:files', 'sass:dev'],
+    'copy:files',
+    'sass:dev',
     'browser-sync',
     callback
   );
