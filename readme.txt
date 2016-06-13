@@ -40,14 +40,14 @@ Table of Contents:
 
 2. Class System. Priority Level: 2-1
 	2.1 Classes
-	2.2 Thoughts about classes, their abilities, and auto-attacks
-		2.2.1 A little bit about abilities
-		2.2.2 Auto-attacks
-	2.3 Medic
-	2.4 Mage
-	2.5 Archer
-	2.6 Knight
-	2.7 Spells
+	2.2 Medic
+	2.3 Mage
+	2.4 Archer
+	2.5 Knight
+	2.6 Spells
+	2.7 Thoughts about classes, their abilities, and auto-attacks
+		2.7.1 A little bit about abilities
+		2.7.2 Auto-attacks
 	
 3. Items. Priority Level: 3
 		3.1 The Item Object Properties
@@ -93,19 +93,19 @@ travels between the client and the server.
 	as well as a lobby system, meant to prevent issues that arise from having too many players on a canvas at once.
 
 	1.1 PVP (Player v.s. Player)
-	- Players can fight each other in an all out brawl.
-	- This could be divided into different subtypes, such as team battle, free for all, etc.
-	- See (2.2 Medic & 5.2 Party System)
+		- Players can fight each other in an all out brawl.
+		- This could be divided into different subtypes, such as team battle, free for all, etc.
+		- See (2.2 Medic & 5.2 Party System)
 
 	1.2 PVE (Player v.s. Environment)
-	- Players team up to fight a dragon that is out to obliterate the entire raid. Other enemies
-could be included as well. However, a dragon is the simplest, and most classic example of this.
+		- Players team up to fight a dragon that is out to obliterate the entire raid. Other enemies
+		could be included as well. However, a dragon is the simplest, and most classic example of this.
 
 	1.3 Lobby System
-	- With too many players, the game will become too hectic to play. We will need
-	separate lobbies, each with a player cap.
-	- Lobbies can be used as a way of separating players that want to play different game modes.
-	- What is the best way to create this?
+		- With too many players, the game will become too hectic to play. We will need
+		separate lobbies, each with a player cap.
+		- Lobbies can be used as a way of separating players that want to play different game modes.
+		- What is the best way to create this?
 
 2. Class System. Priority Level: 2
 
@@ -121,53 +121,52 @@ could be included as well. However, a dragon is the simplest, and most classic e
 			- Archers & Knights: Physical
 		- Each class is either melee or ranged. This will influence the combat logic, because ranged classes
 			will be able to attack from a further distance than melee classes.
-		-The problem of incentivizing people to play medics is addressed in the
-			medic section of this document. See (5.2 Party System)
+		-The problem of incentivizing people to play medics: see (2.2 Medic)
 
----------------------------------------------------------------------------------------------------------------|
-	2.2 Thoughts about classes, their abilities, and auto-attacks
-
-		2.2.1 A little bit about abilities
-			- Something to consider is if the abilities associated with each class (mage: fireball, archer: flaming arrow)
-			should be made as class-specific auto-attacks, or abilities with their own cooldowns.
-
-		2.2.2 Auto-attacks
-			- Should they be included in the game at all? If so, they will need their own attack speed value. For ranged
-			classes, they will need their own collision detection logic, particle size, speed etc. Initiating an auto-attack
-			could mean simply right-clicking another unit while in range, initiating an "attacking" state on the player object.
-----------------------------------------------------------------------------------------------------------------|
-
-	2.3 Medic
+	2.2 Medic
 		- Primarily a healer, but can deal damage too
 		- Ranged magic class
 		- Healing others should be as as simple as hovering over someone and pressing a button.
 		- Incentivizing people to play healers is important.
 			- In a PVP game mode, most players will opt to play a class that does damage instead.
-				How can a party system be utilized as a way around this?
+				How can a party system be utilized as a way around this? See (5.2 Party System)
 
-	2.4 Mage
+	2.3 Mage
 		- Damage
 		- Ranged magic class
 		- Attacks: Fireball
-		- See (2.2 Thoughts) for more on abilities and auto-attacks.
+		- See (2.7 Thoughts) for more on abilities and auto-attacks.
 
-	2.5 Archer
+	2.4 Archer
 		- Damage
 		- Ranged physical class
 		- Attacks: Flame Arrow
-		- See (2.2 Thoughts) for more on abilities and auto-attacks.
+		- See (2.7 Thoughts) for more on abilities and auto-attacks.
 
-	2.6 Knight
+	2.5 Knight
 		- Damage
 			- Could potentially be created as class that soaks damage
 		- Melee physical class
 		- Attacks: Slash
-		- See (2.2 Thoughts) for more on abilities and auto-attacks.
+		- See (2.7 Thoughts) for more on abilities and auto-attacks.
 
 	2.7 Spells
 		- For now, each class will have one spell, but more can be added later. What keycode should spells be assigned to?
 		- Spells can be cast using an eventListener that listens for keyup and keydown events. We could allow the user
 		to change the key to something other than the default option.
+		
+---------------------------------------------------------------------------------------------------------------------------|
+	2.8 Thoughts about classes, their abilities, and auto-attacks
+
+		2.8.1 A little bit about abilities
+			- Something to consider is if the abilities associated with each class (mage: fireball, archer: flaming arrow)
+			should be made as class-specific auto-attacks, or abilities with their own cooldowns.
+
+		2.8.2 Auto-attacks
+			- Should they be included in the game at all? If so, they will need their own attack speed value. For ranged
+			classes, they will need their own collision detection logic, particle size, speed etc. Initiating an auto-attack
+			could mean simply right-clicking another unit while in range, initiating an "attacking" state on the player object.
+---------------------------------------------------------------------------------------------------------------------------|
 
 3. Items. Priority Level: 3
 
@@ -180,7 +179,7 @@ could be included as well. However, a dragon is the simplest, and most classic e
 		- What are the item's statistics?
 			- What kind of statistics are they? Which aspect of the player will be enhanced?
 			- How rare is the item? Will we utilize WoW-style rarity? (Gray, white, green, blue, purple)
-			- See how rarity will inevitably necessitate a trading system at (3.3)
+			- See how rarity will inevitably necessitate a trading system at (3.4)
 			
 	3.1 Creating the Item Objects
 		- An object constructor can be utilized to generate a list that includes many different item objects.
