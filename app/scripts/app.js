@@ -27,27 +27,27 @@
   function keyDown(evt) {
      keysdown[evt.which] = true;
 
-    if (keysdown["38"] === true && keysdown["37"] === true) {
+    if (keysdown[38] && keysdown["37"]) {
       console.log('up & left');
       player.pos.x -= 4;
       player.pos.y -= 4;
       player.animation.y = 0;
-    } else if (keysdown["38"] === true && keysdown["39"] === true) {
+    } else if (keysdown[38] && keysdown[39]) {
       console.log('up & right');
       player.pos.x += 4;
       player.pos.y -= 4;
       player.animation.y = 130;
-    } else if (keysdown["40"] === true && keysdown["37"] === true) {
+    } else if (keysdown[40] && keysdown[37]) {
       console.log('down and left');
       player.pos.x -= 4;
       player.pos.y += 4;
       player.animation.y = 327;
-    } else if (keysdown["40"] === true && keysdown["39"] === true) {
+    } else if (keysdown[40] && keysdown[39]) {
       console.log('down and right');
       player.pos.x += 4;
       player.pos.y += 4;
       player.animation.y = 454;
-    } else if (keysdown["38"] === true) {
+    } else if (keysdown[38] === true) {
       console.log('up');
       player.animation.y = 64;
       player.pos.y -= 4;
@@ -162,7 +162,8 @@
     window.requestAnimationFrame(tick);
 
     window.addEventListener('keydown', keyDown, false);
-    window.addEventListener('keydown', keyUp, false);
+	
+    window.addEventListener('keyup', keyUp, false);
   }
 
   startGame();
