@@ -5,7 +5,7 @@ const runSequence = require('run-sequence');
 const browserSync = require('browser-sync').create();
 
 function clean() {
-  del([
+  return del([
     './.tmp',
     './dist'
   ]).then(function(paths) {
@@ -47,13 +47,21 @@ gulp.task('browser-sync', _browserSync);
 gulp.task('sass:dev', sassDev);
 gulp.task('copy:files', copyFiles);
 gulp.task('watch:files', watchFiles);
-gulp.task('watch', ['default', 'watch:files']);
 
-gulp.task('default', ['clean'], function(callback) {
+gulp.task('serve', function(cb) {
   runSequence(
+    'default',
+    'browser-sync',
+    'watch:files',
+    cb
+  );
+});
+
+gulp.task('default', function(cb) {
+  runSequence(
+    'clean',
     'copy:files',
     'sass:dev',
-    'browser-sync',
-    callback
+    cb
   );
 });
