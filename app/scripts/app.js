@@ -6,8 +6,9 @@
   var keyState = {};
   var keysdown = {};
   var fps = 15;
-  var lastDrawTime = 0;
-  var elapsed;
+  var interval = 1000/fps;
+  var then;
+  var delta;
   var player;
 
   var screenHeight = document.body.offsetHeight;
@@ -122,11 +123,11 @@
 
   function tick(now) {
     requestAnimationFrame(tick);
+    then = then || now;
+    delta = now - then;
 
-    elapsed = now - lastDrawTime;
-
-    if (elapsed > 1000/fps) {
-      lastDrawTime = now - (elapsed % 1000/fps);
+    if (delta > interval) {
+      then = now - (delta % interval);
 
       player.update();
       $GAME.drawBoard(csv);
