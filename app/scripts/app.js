@@ -33,21 +33,95 @@
     }
   }
 
+var keyState;
+
+
+var keyState = {};
+
+/*
+window.onkeydown = window.onkeyup = function(e) {
+  keyState[e.keyCode] = e.type == 'keydown';
+  if (keyState[38] && keyState[37]) {
+    player.pos.x -= 2;
+    player.pos.y -= 2;
+  }
+  else if (keyState[38] && keyState[39]) {
+    player.pos.x += 2;
+    player.pos.y += 2;
+  }
+  else if (keyState[40] && keyState [37]) {
+    player.pos.x -= 2;
+    player.pos.y -= 2;
+  }
+  else if(keyState[40] && keyState [39]) {
+    player.pos.x += 2;
+    player.pos.y -= 2;
+  }
+  else if (keyState[38]) {
+    player.animation.y = 64;
+    player.pos.y -= 2;
+}
+};
+*/
+
+let keysdown = {};
+
+window.addEventListener('keydown', function(evt) {
+  keysdown[evt.which] = true;
+
+  if (keysdown["38"] === true && keysdown["37"] === true) {
+    console.log('up & left');
+    player.pos.x -= 4;
+    player.pos.y -= 4;
+    player.animation.y = 0;
+  } else if (keysdown["38"] === true && keysdown["39"] === true) {
+    console.log('up & right');
+    player.pos.x += 4;
+    player.pos.y -= 4;
+    player.animation.y = 130;
+  } else if (keysdown["40"] === true && keysdown["37"] === true) {
+    console.log('down and left');
+    player.pos.x -= 4;
+    player.pos.y += 4;
+    player.animation.y = 327;
+  } else if (keysdown["40"] === true && keysdown["39"] === true) {
+    console.log('down and right');
+    player.pos.x += 4;
+    player.pos.y += 4;
+    player.animation.y = 454;
+  } else if (keysdown["38"] === true) {
+    console.log('up');
+    player.animation.y = 64;
+    player.pos.y -= 4;
+    player.animation.y = 65;
+  }
+  else if (keysdown[40] === true) {
+    console.log('down');
+    player.pos.y += 4;
+    player.animation.y = 391;
+  }
+  else if (keysdown[37] === true) {
+    console.log('left');
+    player.pos.x -= 4;
+    player.animation.y = 260;
+  }
+  else if (keysdown[39] === true) {
+    console.log('right');
+    player.pos.x += 4;
+    player.animation.y = 194;
+
+  }
+}, false);
+
+window.addEventListener('keyup', function(evt) {
+  keysdown[evt.which] = false;
+}, false);
+
 var Keyboarder = function() {
-  var keyState = {};
-
-  window.onkeydown = function(e) {
-    keyState[e.keyCode] = true;
-  }
-  window.onkeyup = function(e) {
-    keyState[e.keyCode] = false;
-  }
-
-  this.isDown = function(keyCode) {
-    return keyState[keyCode] === true;
-  };
-
-  this.KEYS = { LEFT: 37, RIGHT: 39, SPACE: 32 };
+this.isDown = function(keyCode) {
+  return keyState[keyCode] === true;
+};
+  this.KEYS = { UP: 38, DOWN: 40, LEFT: 37, RIGHT: 39, SPACE: 32 };
 }
 
   var Player = function() {
@@ -56,11 +130,23 @@ var Keyboarder = function() {
 
   Player.prototype = {
     update: function() {
+
       if (this.keyboarder.isDown(this.keyboarder.KEYS.LEFT)) {
         this.pos.x -= 2;
+        this.animation.y = 260;
       }
       else if (this.keyboarder.isDown(this.keyboarder.KEYS.RIGHT)) {
         this.pos.x += 2;
+        this.animation.y = 194;
+      }
+
+      else if (this.keyboarder.isDown(this.keyboarder.KEYS.UP)) {
+        this.pos.y -= 2;
+        player.animation.y = 64;
+      }
+      else if (this.keyboarder.isDown(this.keyboarder.KEYS.DOWN)) {
+        this.pos.y += 2;
+        player.animation.y = 391;
       }
 
     }
@@ -366,7 +452,7 @@ global.onkeyup = function (e) {
       up.pressed = false;
       break;
     case 40:
-      down.pressed = false;
+      dow%n.pressed = false;
       break;
     case 37:
       left.pressed = false;
@@ -380,8 +466,6 @@ global.onkeyup = function (e) {
 */
 
 
-
-var self = this;
 var tick = function() {
 
   player.update();
