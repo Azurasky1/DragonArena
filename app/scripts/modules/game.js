@@ -5,7 +5,6 @@ Comments marked with -B are written by Bill to help better understand the code o
 // document.body.offsetWidth and document.body.offsetHeight
 // Note: Unlike a typical (x, y) axis, when using a method attached to the 2d context object, the y value of the top of the canvas will start at zero.
 */
-
 (function(global, undefined) {
   var screenWidth = document.body.offsetWidth;
   var screenHeight = document.body.offsetHeight;
@@ -13,7 +12,7 @@ Comments marked with -B are written by Bill to help better understand the code o
   function game() {
     // private scope
     var _board = {
-      background: '#FFFFFF'
+      background: '#FAFAFA'
     };
 
     // gameModule is an object, the functions in this file are assigned to this object as methods to be used in the rest of the program
@@ -21,7 +20,7 @@ Comments marked with -B are written by Bill to help better understand the code o
     var gameModule = {};
 
     function drawPlayer(graph, player) {
-      player.avatar.src = player.avatar_src;
+      player.avatar.src = player.avatarSrc;
 
       // taken from (https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage)
       // this function takes eight parameters. (image, sx, sy, swidth, sHeight, dx, dy, dWidth, dHeight)
