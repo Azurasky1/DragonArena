@@ -19,6 +19,8 @@ function showStoreToggle() {
 toggleStore.addEventListener('click', hideStoreToggle);
 showStore.addEventListener('click', showStoreToggle);
 
+// player object constructor
+
 function player(name, money, inventory) {
 this.name = name;
 this.money = money;
