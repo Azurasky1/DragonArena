@@ -9,8 +9,8 @@ creating a 2d game with JS and HTML
 
 Clone this project on your local machine with
 
-```shell
-$ git clone https://github.com/Azurasky1/2dgame.git
+```sh
+git clone https://github.com/Azurasky1/2dgame.git
 ```
 
 ### Install the project dependencies
@@ -21,14 +21,14 @@ installed on your local machine check the
 and the [official NodeJS documentation](https://docs.npmjs.com/getting-started/installing-node),
 then install Gulp globally on your machine with:
 
-```shell
-$ npm i -g gulp
+```sh
+$ npm install --global gulp-cli
 ```
 
 Then navigate inside your project directory and run:
 
-```shell
-$ npm install
+```sh
+npm install
 ```
 
 ## Server side
@@ -36,8 +36,8 @@ $ npm install
 Once you have all the dependencies installed, open a terminal window,
 navigate inside your local copy of this repository. Then run:
 
-```shell
-$ npm start
+```sh
+npm start
 ```
 
 This will initialize the server on your local machine.
@@ -55,8 +55,8 @@ a communication with it.
 Once you have all the dependencies install, open a terminal window,
 navigate inside your local copy of this repository. Then run:
 
-```shell
-$ gulp watch
+```sh
+gulp serve
 ```
 
 This will initialize the client application and will trigger your browser to be
