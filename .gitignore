@@ -1,7 +1,15 @@
+### Node ###
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
 node_modules
-npm_debug.log
 
+### Distributions ###
 dist
-.tmp
 
+### Temp and cache ###
+.tmp
 Thumbs.db
