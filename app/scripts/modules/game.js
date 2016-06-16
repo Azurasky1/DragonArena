@@ -20,8 +20,6 @@ Comments marked with -B are written by Bill to help better understand the code o
     var gameModule = {};
 
     function drawPlayer(graph, player) {
-      player.avatar.src = player.avatarSrc;
-
       // taken from (https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage)
       // this function takes eight parameters. (image, sx, sy, swidth, sHeight, dx, dy, dWidth, dHeight)
       graph.drawImage(
