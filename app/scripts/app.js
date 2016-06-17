@@ -14,15 +14,12 @@
   var now;
   var then;
   var elapsed;
-<<<<<<< HEAD
   var projectiles = [];
   var projectile;
-=======
   var player;
   var playerHealth;
   // keeps track of which keys are pressed
   var keyState = [];
->>>>>>> bcfbf7ef41f14085fa13a355a4a2022bb469e851
 
   // set the canvas to the full page size
   c.width = screenWidth;
@@ -36,7 +33,6 @@
     keyState[e.keyCode || e.which] = false;
   }, true);
 
-<<<<<<< HEAD
   function notColliding(body1, body2) {
     return ((body1.pos.x + body1.frame.width < body2.pos.x) ||
     (body1.pos.x > body2.pos.x + body2.width) ||
@@ -53,13 +49,7 @@
     csv.strokeRect(400, 10, player.frame.width, player.frame.height);
   };
 
-  function Player(totalHealth, currentHealth) {
-    this.health = {
-      total: totalHealth,
-      current: currentHealth,
-      percent: (currentHealth / totalHealth) * 100,
-=======
-  /**
+ /**
    * [Player description]
    *
    * @param {Number} totalHealth   [description]
@@ -67,10 +57,9 @@
    */
   function Player(totalHealth, currentHealth) {
     this.health = {
-      totalHealth: totalHealth,
-      currentHealth: currentHealth,
+      total: totalHealth,
+      current: currentHealth,
       percent: (currentHealth / totalHealth) * 100
->>>>>>> bcfbf7ef41f14085fa13a355a4a2022bb469e851
     };
 
     this.animation = {
@@ -82,27 +71,18 @@
       currentFrame: 0,
       frames: 9,
       width: (500 / 9), // 55.555555555...6
-<<<<<<< HEAD
-      height: (519 / 8), // 57.6666666...7
-=======
-      height: (519 / 9) // 57.6666666...7
->>>>>>> bcfbf7ef41f14085fa13a355a4a2022bb469e851
+      height: (519 / 8) // 57.6666666...7
     };
 
     this.pos = {
       x: screenWidth / 2 - ((500 / 9) / 2),
-<<<<<<< HEAD
-      y: screenHeight / 2  - ((519 / 8) / 2),
-=======
-      y: screenHeight / 2 - ((519 / 9) / 2)
->>>>>>> bcfbf7ef41f14085fa13a355a4a2022bb469e851
+      y: screenHeight / 2  - ((519 / 8) / 2)
     };
 
     this.speed = 1;
     this.avatar = null;
   }
 
-<<<<<<< HEAD
   Player.prototype = {
     update: function (timeBetweenFrames) {
       if (keyState[KEY_UP] && keyState[KEY_LEFT]) {
@@ -153,40 +133,7 @@
           console.log(playerHealth.width);
         }
       }
-    },
-
-=======
-  Player.prototype.update = function(timeBetweenFrames) {
-    if (keyState[KEY_UP] && keyState[KEY_LEFT]) {
-      this.pos.x -= this.speed * timeBetweenFrames;
-      this.pos.y -= this.speed * timeBetweenFrames;
-      this.animation.y = 0;
-    } else if (keyState[KEY_UP] && keyState[KEY_RIGHT]) {
-      this.pos.x += this.speed * timeBetweenFrames;
-      this.pos.y -= this.speed * timeBetweenFrames;
-      this.animation.y = 130;
-    } else if (keyState[KEY_DOWN] && keyState[KEY_LEFT]) {
-      this.pos.x -= this.speed * timeBetweenFrames;
-      this.pos.y += this.speed * timeBetweenFrames;
-      this.animation.y = 327;
-    } else if (keyState[KEY_DOWN] && keyState[KEY_RIGHT]) {
-      this.pos.x += this.speed * timeBetweenFrames;
-      this.pos.y += this.speed * timeBetweenFrames;
-      this.animation.y = 454;
-    } else if (keyState[KEY_UP]) {
-      this.animation.y = 65;
-      this.pos.y -= this.speed * timeBetweenFrames;
-    } else if (keyState[KEY_DOWN]) {
-      this.animation.y = 391;
-      this.pos.y += this.speed * timeBetweenFrames;
-    } else if (keyState[KEY_LEFT]) {
-      this.animation.y = 260;
-      this.pos.x -= this.speed * timeBetweenFrames;
-    } else if (keyState[KEY_RIGHT]) {
-      this.animation.y = 194;
-      this.pos.x += this.speed * timeBetweenFrames;
     }
->>>>>>> bcfbf7ef41f14085fa13a355a4a2022bb469e851
   };
 
   /**
@@ -210,11 +157,12 @@
       x: anyPlayerOrEnemy.pos.x,
       y: anyPlayerOrEnemy.pos.y - 20
     };
-  };
+  }
 
-<<<<<<< HEAD
-  // all health bars will need their own draw and update functions
-  // here they are in the prototype
+  /**
+   * all health bars will need their own draw and update functions
+   * here they are in the prototype
+   */
   Healthbar.prototype = {
     drawBar: function (anyPlayerOrEnemy) {
         if (anyPlayerOrEnemy.health.percent) {
@@ -280,33 +228,6 @@
 
   var playerHealth = new Healthbar(200, 10, 'green', player);
   var projectile = new Projectile(player);
-=======
-  /**
-   * all health bars will need their own draw and update functions
-   * here they are in the prototype
-   *
-   * @param  {Object} anyPlayerOrEnemy [description]
-   */
-  Healthbar.prototype.drawBar = function(anyPlayerOrEnemy) {
-    if (anyPlayerOrEnemy.health.percent) {
-      csv.fillStyle = this.color;
-      csv.fillRect(this.canvasPosition.x,
-                  this.canvasPosition.y,
-                  this.width,
-                  this.height);
-    } else {
-      console.log('In order to determine the length of this health bar, ' +
-                  'please input a player or enemy object with a valid ' +
-                  'health.percent property.');
-    }
-  };
-
-  Healthbar.prototype.update = function(anyPlayerOrEnemy) {
-    this.canvasPosition.x = anyPlayerOrEnemy.pos.x;
-    this.canvasPosition.y = anyPlayerOrEnemy.pos.y - 20;
-    this.width = anyPlayerOrEnemy.health.percent * 2;
-  };
->>>>>>> bcfbf7ef41f14085fa13a355a4a2022bb469e851
 
   /**
    * [updateEverythingThenDraw description]
@@ -318,13 +239,9 @@
     $GAME.drawPlayer(csv, player);
     drawHitBox('black');
     player.update(timeBetweenFrames);
-<<<<<<< HEAD
-    player = $GAME.nextFrame(player);
     player.isColliding();
-=======
     $GAME.nextFrame(player);
     player.health.percent -= .1;
->>>>>>> bcfbf7ef41f14085fa13a355a4a2022bb469e851
     playerHealth.update(player);
     playerHealth.drawBar(player);
     projectile.draw();
