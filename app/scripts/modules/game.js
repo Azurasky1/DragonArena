@@ -1,20 +1,32 @@
-(function (global, undefined) {
+(function(global) {
+  'use strict';
+
   var screenWidth = document.body.offsetWidth;
   var screenHeight = document.body.offsetHeight;
-  function game() {
+
+  /**
+   * [game description]
+   */
+  function Game() {
     // private scope
     var _board = {
-      background: '#FAFAFA',
+      background: '#FAFAFA'
     };
 
     // public scope
     var gameModule = {};
 
+    /**
+     * [drawPlayer description]
+     *
+     * @param  {Object} graph  [description]
+     * @param  {Object} player [description]
+     */
     function drawPlayer(graph, player) {
       // taken from (https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage)
       graph.drawImage(
         player.avatar,
-        player.frame.width * player.frame.current_frame,
+        player.frame.width * player.frame.currentFrame,
         player.animation.y,
         player.frame.width, player.frame.height, // clip size -S
         player.pos.x, player.pos.y, // centered on canvas
@@ -22,14 +34,30 @@
       );
     }
 
+    /**
+     * [nextFrame description]
+     *
+     * @param  {Object} el [description]
+     *
+     * @return {Object}    [description]
+     */
     function nextFrame(el) {
-      if (el.frame.current_frame < el.frame.frames - 1) {
-        el.frame.current_frame += 1;
-      } else
-        el.frame.current_frame = 0;
+      if (el.frame.currentFrame < el.frame.frames - 1) {
+        el.frame.currentFrame += 1;
+
+        return;
+      }
+
+      el.frame.currentFrame = 0;
+
       return el;
     }
 
+    /**
+     * [drawBoard description]
+     *
+     * @param  {Object} canvas [description]
+     */
     function drawBoard(canvas) {
       // added clearRect so that we don't keep drawing over the canvas
       canvas.clearRect(0, 0, canvas.width, canvas.height);
@@ -40,11 +68,8 @@
     gameModule.drawPlayer = drawPlayer;
     gameModule.drawBoard = drawBoard;
     gameModule.nextFrame = nextFrame;
-
-    return gameModule;
-  };
+  }
 
   // expose $PLAYER on the global scope
-  global.$GAME = game();
-
-})(typeof window !== 'undefined' ? window : global);
+  global.$GAME = new Game();
+})(typeof window === 'undefined' ? global : window);
