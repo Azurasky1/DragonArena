@@ -1,20 +1,16 @@
 (function (global) {
   'use strict';
 
-  const KEY_UP = 38;
-  const KEY_DOWN = 40;
-  const KEY_LEFT = 37;
-  const KEY_RIGHT = 39;
+  var KEY_UP = 38;
+  var KEY_DOWN = 40;
+  var KEY_LEFT = 37;
+  var KEY_RIGHT = 39;
   var c = document.getElementById('canvas');
   var csv = c.getContext('2d');
   var keyState = {};
-  var keysdown = {};
-  var lastCall = Date.now();
   var screenHeight = document.body.offsetHeight;
   var screenWidth = document.body.offsetWidth;
   var timeBetweenFrames;
-  var frameCount = 0;
-  var fps;
   var fpsInterval;
   var startTime;
   var now;
@@ -61,19 +57,19 @@
   };
 
   Player.prototype.update = function (timeBetweenFrames) {
-    if (keyState[38] && keyState[37]) {
+    if (keyState[KEY_UP] && keyState[KEY_LEFT]) {
       this.pos.x -= this.speed * timeBetweenFrames;
       this.pos.y -= this.speed * timeBetweenFrames;
       this.animation.y = 0;
-    } else if (keyState[38] && keyState[39]) {
+    } else if (keyState[KEY_UP] && keyState[KEY_RIGHT]) {
       this.pos.x += this.speed * timeBetweenFrames;
       this.pos.y -= this.speed * timeBetweenFrames;
       this.animation.y = 130;
-    }  else if (keyState[40] && keyState[37]) {
+    }  else if (keyState[KEY_DOWN] && keyState[KEY_LEFT]) {
       this.pos.x -= this.speed * timeBetweenFrames;
       this.pos.y += this.speed * timeBetweenFrames;
       this.animation.y = 327;
-    }  else if (keyState[40] && keyState[39]) {
+    }  else if (keyState[KEY_DOWN] && keyState[KEY_RIGHT]) {
       this.pos.x += this.speed * timeBetweenFrames;
       this.pos.y += this.speed * timeBetweenFrames;
       this.animation.y = 454;
@@ -94,7 +90,7 @@
 
   var player = new Player(100, 100);
 
-  // healthbar constructor
+  // healthbar varructor
   // creates healthbar and sets position 20px above the passed in object
   // for now, all healthbars will be 200px in width, or...
   // ... twice the health percentage of any given object
@@ -135,13 +131,28 @@
   var playerHealth = new Healthbar(200, 10, 'green', player);
 
   function updateEverythingThenDraw(timeBetweenFrames) {
-    player.update(timeBetweenFrames);
-    player = $GAME.nextFrame(player);
     $GAME.drawBoard(csv);
     $GAME.drawPlayer(csv, player);
+    playerHealth.drawBar(player);
+    player.update(timeBetweenFrames);
+    player = $GAME.nextFrame(player);
     player.health.percent -= .1;
     playerHealth.update(player);
-    playerHealth.drawBar(player);
+  }
+
+  function tick() {
+    if (player.health.percent <= 0) {
+      console.log('You ran out of health! You lose!');
+      return;
+    }  else {
+      requestAnimationFrame(tick);
+      now = Date.now();
+      elapsed = now - then;
+      if (elapsed > fpsInterval) {
+        then = now - (elapsed % fpsInterval);
+        updateEverythingThenDraw(elapsed);
+      }
+    }
   }
 
   function startGame(fps) {
@@ -149,23 +160,6 @@
     then = Date.now();
     startTime = then;
     tick();
-  }
-
-  function tick() {
-
-    if (player.health.percent < 0) {
-      console.log('You ran out of health! You lose!');
-      return;
-    }  else {
-      requestAnimationFrame(tick);
-      now = Date.now();
-      elapsed = now - then;
-
-      if (elapsed > fpsInterval) {
-        then = now - (elapsed % fpsInterval);
-        updateEverythingThenDraw(elapsed);
-      }
-    }
   }
 
   player.avatar = new Image();
