@@ -13,6 +13,8 @@
   var now;
   var then;
   var elapsed;
+  var player;
+  var playerHealth;
   // keeps track of which keys are pressed
   var keyState = [];
 
@@ -94,8 +96,6 @@
     }
   };
 
-  var player = new Player(100, 100);
-
   /**
    * healthbar varructor
    * creates healthbar and sets position 20px above the passed in object
@@ -145,8 +145,6 @@
     this.width = anyPlayerOrEnemy.health.percent * 2;
   };
 
-  var playerHealth = new Healthbar(200, 10, 'green', player);
-
   /**
    * [updateEverythingThenDraw description]
    *
@@ -157,7 +155,7 @@
     $GAME.drawPlayer(csv, player);
     playerHealth.drawBar(player);
     player.update(timeBetweenFrames);
-    player = $GAME.nextFrame(player);
+    $GAME.nextFrame(player);
     player.health.percent -= .1;
     playerHealth.update(player);
   }
@@ -191,6 +189,8 @@
     tick();
   }
 
+  player = new Player(100, 100);
+  playerHealth = new Healthbar(200, 10, 'green', player);
   player.avatar = new Image();
 
   player.avatar.onload = function() {

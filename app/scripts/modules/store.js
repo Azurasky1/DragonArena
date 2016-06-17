@@ -68,7 +68,6 @@
    */
   function updateBalance() {
     // print to an element
-    console.log('here');
     balance.textContent = ('Balance: ' + player1.money);
   }
 

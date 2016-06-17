@@ -8,13 +8,14 @@
    * [game description]
    */
   function Game() {
+    var self = this;
+
     // private scope
     var _board = {
       background: '#FAFAFA'
     };
 
     // public scope
-    var gameModule = {};
 
     /**
      * [drawPlayer description]
@@ -38,19 +39,13 @@
      * [nextFrame description]
      *
      * @param  {Object} el [description]
-     *
-     * @return {Object}    [description]
      */
     function nextFrame(el) {
       if (el.frame.currentFrame < el.frame.frames - 1) {
         el.frame.currentFrame += 1;
-
-        return;
+      } else {
+        el.frame.currentFrame = 0;
       }
-
-      el.frame.currentFrame = 0;
-
-      return el;
     }
 
     /**
@@ -65,9 +60,9 @@
       canvas.fillRect(0, 0, screenWidth, screenHeight);
     }
 
-    gameModule.drawPlayer = drawPlayer;
-    gameModule.drawBoard = drawBoard;
-    gameModule.nextFrame = nextFrame;
+    self.drawPlayer = drawPlayer;
+    self.drawBoard = drawBoard;
+    self.nextFrame = nextFrame;
   }
 
   // expose $PLAYER on the global scope
