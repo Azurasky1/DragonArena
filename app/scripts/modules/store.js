@@ -45,15 +45,16 @@
    * ALL FUNCTIONS INVOLVING MONEY HERE
    */
   var updateBalance = function () {
-  // print to an element
-  console.log('here');
+    // print to an element
+    console.log('here');
     balance.textContent = ('Balance: ' + player1.money);
-  }
+  };
 
   // Show the player balance above, this should be called both when a player adds or sells an item.
   var notEnough = function () {
-    shopNotice.innerHTML = ('You cannot afford that item! You need ' + item.price - player1.money + ' more coins.');
-  }
+    shopNotice.innerHTML = ('You cannot afford that item! You need '
+    + item.price - player1.money + ' more coins.');
+  };
 
   updateBalance();
 
@@ -62,7 +63,7 @@
       var itemDescription = document.getElementById('itemDescription');
       itemDescription.innerHTML = item.Description;
     }
-  }
+  };
 
   var swordOfAwesome = new shopItem('Sword of Awesome', 70, 35, 10, 'An awesome sword', false);
   var trevorShield = new shopItem('Trevor\'s Shield', 10, 5, 10, 'Designed by Trevor', false);
