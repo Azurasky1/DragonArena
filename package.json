@@ -43,7 +43,8 @@
     },
     "globals": {
       "window": true,
-      "$GAME": true
+      "$GAME": true,
+      "$PROJECTILE": true
     }
   }
 }
