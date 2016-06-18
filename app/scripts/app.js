@@ -5,6 +5,7 @@
   var KEY_DOWN = 40;
   var KEY_LEFT = 37;
   var KEY_RIGHT = 39;
+  var KEY_SPACE = 32;
   var c = document.getElementById('canvas');
   var csv = c.getContext('2d');
   var screenHeight = document.body.offsetHeight;
@@ -13,6 +14,8 @@
   var now;
   var then;
   var elapsed;
+  var projectiles = [];
+  var projectile;
   var player;
   var playerHealth;
   // keeps track of which keys are pressed
@@ -31,6 +34,34 @@
   }, true);
 
   /**
+   * [notColliding description]
+   *
+   * @param  {Object} body1 [description]
+   * @param  {Object} body2 [description]
+   */
+  function notColliding(body1, body2) {
+    return ((body1.pos.x + body1.frame.width < body2.pos.x) ||
+    (body1.pos.x > body2.pos.x + body2.width) ||
+    (body1.pos.y > body2.pos.y + body2.height) ||
+    (body1.pos.y + body1.height < body2.pos.y));
+  }
+
+  /**
+   * [drawHitBox description]
+   *
+   * @param  {String} color [description]
+   */
+  function drawHitBox(color) {
+    csv.strokeStyle = color;
+    csv.strokeRect(player.pos.x, player.pos.y,
+        player.frame.width, player.frame.height);
+    csv.fillStyle = 'blue';
+    csv.font = '30px Cambria';
+    csv.fillText('Player hitbox(red = collision): ', 10, 30);
+    csv.strokeRect(400, 10, player.frame.width, player.frame.height);
+  }
+
+  /**
    * [Player description]
    *
    * @param {Number} totalHealth   [description]
@@ -38,8 +69,8 @@
    */
   function Player(totalHealth, currentHealth) {
     this.health = {
-      totalHealth: totalHealth,
-      currentHealth: currentHealth,
+      total: totalHealth,
+      current: currentHealth,
       percent: (currentHealth / totalHealth) * 100
     };
 
@@ -52,12 +83,12 @@
       currentFrame: 0,
       frames: 9,
       width: (500 / 9), // 55.555555555...6
-      height: (519 / 9) // 57.6666666...7
+      height: (519 / 8) // 57.6666666...7
     };
 
     this.pos = {
       x: screenWidth / 2 - ((500 / 9) / 2),
-      y: screenHeight / 2 - ((519 / 9) / 2)
+      y: screenHeight / 2 - ((519 / 8) / 2)
     };
 
     this.speed = 1;
@@ -93,6 +124,25 @@
     } else if (keyState[KEY_RIGHT]) {
       this.animation.y = 194;
       this.pos.x += this.speed * timeBetweenFrames;
+    } else if (keyState[KEY_SPACE]) {
+      // pushes a new Projectile() object onto the projectiles array
+      $PROJECTILE.createNew(this, projectiles);
+      console.log(projectiles.length);
+    } else {
+      // console.log('No keys being pressed right now');
+    }
+  };
+
+  Player.prototype.isColliding = function() {
+    for (var i = 0; i < projectiles.length; i++) {
+      var projectile = projectiles[i];
+      if (notColliding(player, projectile) === false) {
+        player.health.percent -= 1;
+        console.log('collision!');
+        drawHitBox('red');
+        console.log(player.health.percent);
+        console.log(playerHealth.width);
+      }
     }
   };
 
@@ -113,7 +163,7 @@
     this.width = width;
     this.height = height;
     this.color = hex;
-    this.canvasPosition = {
+    this.pos = {
       x: anyPlayerOrEnemy.pos.x,
       y: anyPlayerOrEnemy.pos.y - 20
     };
@@ -128,20 +178,17 @@
   Healthbar.prototype.drawBar = function(anyPlayerOrEnemy) {
     if (anyPlayerOrEnemy.health.percent) {
       csv.fillStyle = this.color;
-      csv.fillRect(this.canvasPosition.x,
-                  this.canvasPosition.y,
-                  this.width,
-                  this.height);
+      csv.fillRect(this.pos.x, this.pos.y, this.width, this.height);
     } else {
-      console.log('In order to determine the length of this health bar, ' +
-                  'please input a player or enemy object with a valid ' +
-                  'health.percent property.');
+      console.log('In order to determine the length of this ' +
+        'health bar, please input a player' +
+        ' or enemy object with a valid .health.percent property.');
     }
   };
 
   Healthbar.prototype.update = function(anyPlayerOrEnemy) {
-    this.canvasPosition.x = anyPlayerOrEnemy.pos.x;
-    this.canvasPosition.y = anyPlayerOrEnemy.pos.y - 20;
+    this.pos.x = anyPlayerOrEnemy.pos.x - anyPlayerOrEnemy.frame.width;
+    this.pos.y = anyPlayerOrEnemy.pos.y - 20;
     this.width = anyPlayerOrEnemy.health.percent * 2;
   };
 
@@ -153,11 +200,15 @@
   function updateEverythingThenDraw(timeBetweenFrames) {
     $GAME.drawBoard(csv);
     $GAME.drawPlayer(csv, player);
-    playerHealth.drawBar(player);
+    drawHitBox('black');
     player.update(timeBetweenFrames);
+    player.isColliding();
     $GAME.nextFrame(player);
     player.health.percent -= .1;
     playerHealth.update(player);
+    playerHealth.drawBar(player);
+    $PROJECTILE.draw(projectiles, csv);
+    $PROJECTILE.update(projectiles);
   }
 
   /**
@@ -192,6 +243,7 @@
   player = new Player(100, 100);
   playerHealth = new Healthbar(200, 10, 'green', player);
   player.avatar = new Image();
+  // projectile = new Projectile(player);
 
   player.avatar.onload = function() {
     startGame(30);
