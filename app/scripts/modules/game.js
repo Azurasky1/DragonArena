@@ -1,9 +1,6 @@
 (function(global) {
   'use strict';
 
-  var screenWidth = document.body.offsetWidth;
-  var screenHeight = document.body.offsetHeight;
-
   /**
    * [game description]
    */
@@ -20,19 +17,17 @@
     /**
      * [drawPlayer description]
      *
-     * @param  {Object} graph  [description]
-     * @param  {Object} player [description]
+     * @param  {Object} game  [description]
      */
-    function drawPlayer(graph, player) {
+    function drawPlayer(game) {
       // taken from (https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage)
-      graph.drawImage(
-        player.avatar,
-        player.frame.width * player.frame.currentFrame,
-        player.animation.y,
-        player.frame.width, player.frame.height, // clip size -S
-        player.pos.x, player.pos.y, // centered on canvas
-        player.frame.width, player.frame.height // image size to draw
-      );
+      game.csv.drawImage(game.player.avatar,
+                      game.player.frame.width * game.player.frame.currentFrame,
+                      game.player.animation.y,
+                      game.player.frame.width, game.player.frame.height, // clip size
+                      game.player.pos.x, game.player.pos.y, // centered on canvas
+                      game.player.frame.scaleWidth, game.player.frame.scaleHeight // image size to draw
+                    );
     }
 
     /**
@@ -51,13 +46,17 @@
     /**
      * [drawBoard description]
      *
-     * @param  {Object} canvas [description]
+     * @param  {Object} game [description]
      */
-    function drawBoard(canvas) {
+    function drawBoard(game) {
       // added clearRect so that we don't keep drawing over the canvas
-      canvas.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.fillStyle = _board.background;
-      canvas.fillRect(0, 0, screenWidth, screenHeight);
+      game.csv.clearRect(0, 0,
+                        game.screenSize.screenWidth,
+                        game.screenSize.screenHeight);
+      game.csv.fillStyle = _board.background;
+      game.csv.fillRect(0, 0,
+                        game.screenSize.screenWidth,
+                        game.screenSize.screenHeight);
     }
 
     self.drawPlayer = drawPlayer;

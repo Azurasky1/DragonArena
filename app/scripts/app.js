@@ -1,43 +1,65 @@
 (function(global) {
   'use strict';
 
+  // Namespace containing all the game's variables
+  var game = {};
   var KEY_UP = 38;
   var KEY_DOWN = 40;
   var KEY_LEFT = 37;
   var KEY_RIGHT = 39;
   var KEY_SPACE = 32;
-  var c = document.getElementById('canvas');
-  var csv = c.getContext('2d');
-  var screenHeight = document.body.offsetHeight;
-  var screenWidth = document.body.offsetWidth;
-  var fpsInterval;
-  var now;
-  var then;
-  var elapsed;
-  var projectiles = [];
-  var projectile;
-  var player;
-  var playerHealth;
+
   // keeps track of which keys are pressed
   var keyState = [];
 
-  // set the canvas to the full page size
-  c.width = screenWidth;
-  c.height = screenHeight;
+  /**
+   * keyDwn
+   *
+   * @param  {Object} evt   Event
+   */
+  function keyDwn(evt) {
+    keyState[evt.keyCode || evt.which] = true;
+  }
 
-  window.addEventListener('keydown', function(e) {
-    keyState[e.keyCode || e.which] = true;
-  }, true);
+  /**
+   * keyUp
+   *
+   * @param  {Object} evt   Event
+   */
+  function keyUp(evt) {
+    keyState[evt.keyCode || evt.which] = false;
+  }
 
-  window.addEventListener('keyup', function(e) {
-    keyState[e.keyCode || e.which] = false;
-  }, true);
+  /**
+   * resize the game
+   */
+  function resize() {
+    game.screenSize.screenHeight = document.body.offsetHeight;
+    game.screenSize.screenWidth = document.body.offsetWidth;
+
+    game.c.width = game.screenSize.screenWidth;
+    game.c.height = game.screenSize.screenHeight;
+
+    game.player.frame.scaleWidth = game.screenSize.screenWidth *
+      game.player.frame.width / 1200;
+
+    game.player.frame.scaleHeight = game.screenSize.screenWidth *
+      game.player.frame.height / 1200;
+
+    // Max screen size
+    if (game.screenSize.screenWidth >= 1200) {
+      game.player.frame.scaleWidth = game.player.frame.width;
+      game.player.frame.scaleHeight = game.player.frame.height;
+    }
+  }
 
   /**
    * [notColliding description]
    *
    * @param  {Object} body1 [description]
    * @param  {Object} body2 [description]
+   *
+   * @return {Boolean}      false if no collisions are detected
    */
   function notColliding(body1, body2) {
     return ((body1.pos.x + body1.frame.width < body2.pos.x) ||
@@ -52,13 +74,19 @@
    * @param  {String} color [description]
    */
   function drawHitBox(color) {
-    csv.strokeStyle = color;
-    csv.strokeRect(player.pos.x, player.pos.y,
-        player.frame.width, player.frame.height);
-    csv.fillStyle = 'blue';
-    csv.font = '30px Cambria';
-    csv.fillText('Player hitbox(red = collision): ', 10, 30);
-    csv.strokeRect(400, 10, player.frame.width, player.frame.height);
+    game.csv.strokeStyle = color;
+    game.csv.strokeRect(game.player.pos.x, game.player.pos.y,
+        game.player.frame.width, game.player.frame.height);
+    game.csv.fillStyle = 'blue';
+    game.csv.font = '30px Cambria';
+    game.csv.fillText(
+      'Player hitbox(red = collision): ',
+      10, 30
+    );
+    game.csv.strokeRect(
+        400, 10,
+        game.player.frame.width, game.player.frame.height
+      );
   }
 
   /**
@@ -82,17 +110,16 @@
     this.frame = {
       currentFrame: 0,
       frames: 9,
-      width: (500 / 9), // 55.555555555...6
-      height: (519 / 8) // 57.6666666...7
+      width: 55.5,
+      height: 65
     };
 
     this.pos = {
-      x: screenWidth / 2 - ((500 / 9) / 2),
-      y: screenHeight / 2 - ((519 / 8) / 2)
+      x: (game.screenSize.screenWidth - this.frame.width) / 2,
+      y: (game.screenSize.screenHeight - this.frame.height) / 2
     };
 
     this.speed = 1;
-    this.avatar = null;
   }
 
   Player.prototype.update = function(timeBetweenFrames) {
@@ -125,23 +152,22 @@
       this.animation.y = 194;
       this.pos.x += this.speed * timeBetweenFrames;
     } else if (keyState[KEY_SPACE]) {
+      console.log('boom');
       // pushes a new Projectile() object onto the projectiles array
-      $PROJECTILE.createNew(this, projectiles);
-      console.log(projectiles.length);
-    } else {
-      // console.log('No keys being pressed right now');
+      $PROJECTILE.createNew(this, game.projectiles);
+      console.log(game.projectiles.length);
     }
   };
 
   Player.prototype.isColliding = function() {
-    for (var i = 0; i < projectiles.length; i++) {
-      var projectile = projectiles[i];
-      if (notColliding(player, projectile) === false) {
-        player.health.percent -= 1;
+    for (var i = 0; i < game.projectiles.length; i++) {
+      var projectile = game.projectiles[i];
+      if (notColliding(game.player, projectile) === false) {
+        game.player.health.percent -= 1;
         console.log('collision!');
         drawHitBox('red');
-        console.log(player.health.percent);
-        console.log(playerHealth.width);
+        console.log(game.player.health.percent);
+        console.log(game.playerHealth.width);
       }
     }
   };
@@ -177,8 +203,8 @@
    */
   Healthbar.prototype.drawBar = function(anyPlayerOrEnemy) {
     if (anyPlayerOrEnemy.health.percent) {
-      csv.fillStyle = this.color;
-      csv.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+      game.csv.fillStyle = this.color;
+      game.csv.fillRect(this.pos.x, this.pos.y, this.width, this.height);
     } else {
       console.log('In order to determine the length of this ' +
         'health bar, please input a player' +
@@ -198,32 +224,34 @@
    * @param  {Number} timeBetweenFrames [description]
    */
   function updateEverythingThenDraw(timeBetweenFrames) {
-    $GAME.drawBoard(csv);
-    $GAME.drawPlayer(csv, player);
+    $GAME.drawBoard(game);
+    $GAME.drawPlayer(game);
     drawHitBox('black');
-    player.update(timeBetweenFrames);
-    player.isColliding();
-    $GAME.nextFrame(player);
-    player.health.percent -= .1;
-    playerHealth.update(player);
-    playerHealth.drawBar(player);
-    $PROJECTILE.draw(projectiles, csv);
-    $PROJECTILE.update(projectiles);
+    game.player.update(timeBetweenFrames);
+    game.player.isColliding();
+    $GAME.nextFrame(game.player);
+    game.player.health.percent -= .1;
+    game.playerHealth.update(game.player);
+    game.playerHealth.drawBar(game.player);
+    $PROJECTILE.draw(game.projectiles, game.csv);
+    $PROJECTILE.update(game.projectiles);
   }
 
   /**
    * [tick description]
    */
   function tick() {
-    if (player.health.percent <= 0) {
+    if (game.player.health.percent <= 0) {
       console.log('You ran out of health! You lose!');
     } else {
       requestAnimationFrame(tick);
-      now = Date.now();
-      elapsed = now - then;
-      if (elapsed > fpsInterval) {
-        then = now - (elapsed % fpsInterval);
-        updateEverythingThenDraw(elapsed);
+
+      game.frameSet.now = Date.now();
+      game.frameSet.elapsed = game.frameSet.now - game.frameSet.then;
+      if (game.frameSet.elapsed > game.frameSet.fpsInterval) {
+        game.frameSet.then = game.frameSet.now -
+          (game.frameSet.elapsed % game.frameSet.fpsInterval);
+        updateEverythingThenDraw(game.frameSet.elapsed);
       }
     }
   }
@@ -234,24 +262,61 @@
    * @param  {Number} fps [description]
    */
   function startGame(fps) {
-    fpsInterval = 1000 / fps;
-    then = Date.now();
+    game.projectiles = [];
+    game.playerHealth = new Healthbar(200, 10,
+                                      'green',
+                                      game.player
+                                    );
+
+    game.frameSet.fpsInterval = 1000 / fps;
+    game.frameSet.then = Date.now();
 
     tick();
   }
 
-  player = new Player(100, 100);
-  playerHealth = new Healthbar(200, 10, 'green', player);
-  player.avatar = new Image();
-  // projectile = new Projectile(player);
+  /**
+   * Initialize the game variables
+   */
+  function _init() {
+    game.c = document.getElementById('canvas');
+    game.csv = game.c.getContext('2d');
 
-  player.avatar.onload = function() {
-    startGame(30);
-  };
+    game.screenSize = {
+      screenWidth: document.body.offsetWidth,
+      screenHeight: document.body.offsetHeight
+    };
 
-  player.avatar.onerror = function() {
-    console.error('Cannot load spritesheet');
-  };
+    game.frameSet = {
+      fps: 20,
+      fpsInterval: null,
+      now: null,
+      then: null,
+      elapsed: null
+    };
 
-  player.avatar.src = '/images/players/001.png';
+    // set the canvas to the full page size
+    game.c.width = game.screenSize.screenWidth;
+    game.c.height = game.screenSize.screenHeight;
+
+    game.player = new Player(100, 100);
+    game.player.avatar = new Image();
+
+    game.player.avatar.onload = function() {
+      startGame(game.frameSet.fps);
+    };
+
+    game.player.avatar.onerror = function() {
+      console.error('Cannot load spritesheet');
+    };
+
+    game.player.avatar.src = '/images/players/001.png';
+
+    resize();
+
+    window.addEventListener('keydown', keyDwn, false);
+    window.addEventListener('keyup', keyUp, false);
+    window.addEventListener('resize', resize, false);
+  }
+
+  _init();
 })(typeof window === 'undefined' ? global : window);
