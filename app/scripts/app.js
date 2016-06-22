@@ -15,11 +15,10 @@
   var then;
   var elapsed;
   var projectiles = [];
-  var projectile;
-  var player;
   var playerHealth;
   // keeps track of which keys are pressed
   var keyState = [];
+  window.bodies = [];
 
   // set the canvas to the full page size
   c.width = screenWidth;
@@ -39,27 +38,12 @@
    * @param  {Object} body1 [description]
    * @param  {Object} body2 [description]
    */
-  function notColliding(body1, body2) {
-    return ((body1.pos.x + body1.frame.width < body2.pos.x) ||
-    (body1.pos.x > body2.pos.x + body2.width) ||
-    (body1.pos.y > body2.pos.y + body2.height) ||
-    (body1.pos.y + body1.height < body2.pos.y));
-  }
 
   /**
    * [drawHitBox description]
    *
    * @param  {String} color [description]
    */
-  function drawHitBox(color) {
-    csv.strokeStyle = color;
-    csv.strokeRect(player.pos.x, player.pos.y,
-        player.frame.width, player.frame.height);
-    csv.fillStyle = 'blue';
-    csv.font = '30px Cambria';
-    csv.fillText('Player hitbox(red = collision): ', 10, 30);
-    csv.strokeRect(400, 10, player.frame.width, player.frame.height);
-  }
 
   /**
    * [Player description]
@@ -100,33 +84,41 @@
       this.pos.x -= this.speed * timeBetweenFrames;
       this.pos.y -= this.speed * timeBetweenFrames;
       this.animation.y = 0;
+      bodies[0] = this;
     } else if (keyState[KEY_UP] && keyState[KEY_RIGHT]) {
       this.pos.x += this.speed * timeBetweenFrames;
       this.pos.y -= this.speed * timeBetweenFrames;
       this.animation.y = 130;
+      bodies[0] = this;
     } else if (keyState[KEY_DOWN] && keyState[KEY_LEFT]) {
       this.pos.x -= this.speed * timeBetweenFrames;
       this.pos.y += this.speed * timeBetweenFrames;
       this.animation.y = 327;
+      bodies[0] = this;
     } else if (keyState[KEY_DOWN] && keyState[KEY_RIGHT]) {
       this.pos.x += this.speed * timeBetweenFrames;
       this.pos.y += this.speed * timeBetweenFrames;
       this.animation.y = 454;
+      bodies[0] = this;
     } else if (keyState[KEY_UP]) {
       this.animation.y = 65;
       this.pos.y -= this.speed * timeBetweenFrames;
+      bodies[0] = this;
     } else if (keyState[KEY_DOWN]) {
       this.animation.y = 391;
       this.pos.y += this.speed * timeBetweenFrames;
+      bodies[0] = this;
     } else if (keyState[KEY_LEFT]) {
       this.animation.y = 260;
       this.pos.x -= this.speed * timeBetweenFrames;
+      bodies[0] = this;
     } else if (keyState[KEY_RIGHT]) {
       this.animation.y = 194;
       this.pos.x += this.speed * timeBetweenFrames;
+      bodies[0] = this;
     } else if (keyState[KEY_SPACE]) {
       // pushes a new Projectile() object onto the projectiles array
-      $PROJECTILE.createNew(this, projectiles);
+      projectile.createNew(this);
       console.log(projectiles.length);
     } else {
       // console.log('No keys being pressed right now');
@@ -134,9 +126,9 @@
   };
 
   Player.prototype.isColliding = function() {
-    for (var i = 0; i < projectiles.length; i++) {
-      var projectile = projectiles[i];
-      if (notColliding(player, projectile) === false) {
+    for (var i = 0; i < bodies.length; i++) {
+      if (bodies[i] instanceof Projectile) {
+      if ($GAME.collisionDetection(player, bodies[i]) === false) {
         player.health.percent -= 1;
         console.log('collision!');
         drawHitBox('red');
@@ -144,6 +136,55 @@
         console.log(playerHealth.width);
       }
     }
+  }
+  };
+
+  function Projectile(anyPlayerOrEnemy) {
+    this.pos = {
+      x: anyPlayerOrEnemy.pos.x + anyPlayerOrEnemy.frame.width + 10,
+      y: anyPlayerOrEnemy.pos.y + anyPlayerOrEnemy.frame.height / 2,
+    };
+    this.width = 10;
+    this.height = 10;
+    this.velocity = {
+      x: 20,
+      y: 0,
+    };
+    this.onHit = {
+      passThrough: false,
+      disappear: false,
+      explode: false,
+    }
+    this.color = 'black';
+  };
+
+  Projectile.prototype = {
+    draw: function () {
+      for (var i = 0; i < bodies.length; i++) {
+        if (bodies[i] instanceof Projectile) {
+        csv.clearRect(bodies[i].pos.x, bodies[i].pos.y,
+        bodies[i].width, bodies[i].height);
+        csv.fillStyle = bodies[i].color;
+        csv.fillRect(bodies[i].pos.x, bodies[i].pos.y,
+        bodies[i].width, bodies[i].height);
+      }
+    }
+  },
+
+    // makes new projectile
+    createNew: function (anyPlayerOrEnemy) {
+      var projectile = new Projectile(anyPlayerOrEnemy);
+      bodies.push(projectile);
+    },
+
+    update: function () {
+      for (var i = 0; i < bodies.length; i++) {
+        if (bodies[i] instanceof Projectile) {
+        bodies[i].pos.x += bodies[i].velocity.x;
+        bodies[i].pos.y += bodies[i].velocity.y;
+        }
+      }
+    },
   };
 
   /**
@@ -192,6 +233,35 @@
     this.width = anyPlayerOrEnemy.health.percent * 2;
   };
 
+  var player = new Player(100, 100);
+  var playerHealth = new Healthbar(200, 10, 'green', player);
+  var projectile = new Projectile(player);
+
+  bodies[0] = player;
+  console.log(bodies.indexOf(player));
+
+  function drawHitBox(color) {
+      csv.strokeStyle = color;
+      csv.fillStyle = 'blue';
+      csv.font = '30px Cambria';
+      csv.fillText('Player hitbox(red = collision): ', 10, 30);
+      // for the key on the top-left
+      for (var i = 0; i < bodies.length; i++) {
+        console.log(bodies[i] + "!!!");
+        // for players, since they have .frame
+        // in the future, remove player.frame.width, just use player.width
+        if (bodies[i] instanceof Player) {
+          csv.strokeRect(bodies[i].pos.x, bodies[i].pos.y, bodies[i].frame.width, bodies[i].frame.height);
+        } else if (bodies[i] instanceof Projectile) {
+
+          // for projectiles, since they don't have .frame
+          // csv.strokeRect(bodies[i].pos.x - 5, bodies[i].pos.y - 5, bodies[i].width + 10, bodies[i].height + 10);
+        } else {
+          console.error("Can't draw " + bodies[i] + ", check for a width and a height");
+        }
+      }
+    };
+
   /**
    * [updateEverythingThenDraw description]
    *
@@ -207,8 +277,8 @@
     player.health.percent -= .1;
     playerHealth.update(player);
     playerHealth.drawBar(player);
-    $PROJECTILE.draw(projectiles, csv);
-    $PROJECTILE.update(projectiles);
+    projectile.draw(projectiles, csv);
+    projectile.update(projectiles);
   }
 
   /**
