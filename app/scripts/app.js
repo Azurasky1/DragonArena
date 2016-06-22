@@ -126,9 +126,9 @@
   };
 
   Player.prototype.isColliding = function() {
-    for (var i = 0; i < bodies.length; i++) {
-      if (bodies[i] instanceof Projectile) {
-      if ($GAME.collisionDetection(player, bodies[i]) === false) {
+    for (var i = 0; i < projectiles.length; i++) {
+      var projectile = projectiles[i];
+      if (notColliding(player, projectile) === false) {
         player.health.percent -= 1;
         console.log('collision!');
         drawHitBox('red');
@@ -136,7 +136,6 @@
         console.log(playerHealth.width);
       }
     }
-  }
   };
 
   function Projectile(anyPlayerOrEnemy) {
@@ -240,22 +239,24 @@
   bodies[0] = player;
   console.log(bodies.indexOf(player));
 
-  function drawHitBox(color) {
-      csv.strokeStyle = color;
+  function drawHitBox() {
+    console.log(bodies);
+      csv.strokeStyle = 'black';
       csv.fillStyle = 'blue';
       csv.font = '30px Cambria';
       csv.fillText('Player hitbox(red = collision): ', 10, 30);
       // for the key on the top-left
       for (var i = 0; i < bodies.length; i++) {
-        console.log(bodies[i] + "!!!");
+
         // for players, since they have .frame
         // in the future, remove player.frame.width, just use player.width
-        if (bodies[i] instanceof Player) {
+        if (bodies[i].frame) {
           csv.strokeRect(bodies[i].pos.x, bodies[i].pos.y, bodies[i].frame.width, bodies[i].frame.height);
-        } else if (bodies[i] instanceof Projectile) {
+        } else if (bodies[i].width) {
 
           // for projectiles, since they don't have .frame
-          // csv.strokeRect(bodies[i].pos.x - 5, bodies[i].pos.y - 5, bodies[i].width + 10, bodies[i].height + 10);
+          csv.clearRect(bodies[i].pos.x, bodies[i].pos.y, bodies[i].width, bodies[i].height);
+          csv.strokeRect(bodies[i].pos.x, bodies[i].pos.y, bodies[i].width, bodies[i].height);
         } else {
           console.error("Can't draw " + bodies[i] + ", check for a width and a height");
         }
@@ -270,7 +271,7 @@
   function updateEverythingThenDraw(timeBetweenFrames) {
     $GAME.drawBoard(csv);
     $GAME.drawPlayer(csv, player);
-    drawHitBox('black');
+    drawHitBox(csv, bodies);
     player.update(timeBetweenFrames);
     player.isColliding();
     $GAME.nextFrame(player);
