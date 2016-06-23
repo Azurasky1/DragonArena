@@ -16,6 +16,10 @@
   var elapsed;
   var projectiles = [];
   var playerHealth;
+  var dragonurl;
+
+  dragonurl = new Image();
+  dragonurl.src = '/images/dragon.png';
   // keeps track of which keys are pressed
   var keyState = [];
   window.bodies = [];
@@ -64,8 +68,8 @@
     };
 
     this.frame = {
-      currentFrame: 0,
-      frames: 9,
+      current: 0,
+      total: 9,
       width: (500 / 9), // 55.555555555...6
       height: (519 / 8) // 57.6666666...7
     };
@@ -139,7 +143,7 @@
   }
   };
 
-  function Projectile(anyPlayerOrEnemy) {
+  function Projectile(anyPlayerOrEnemy, color) {
     this.pos = {
       x: anyPlayerOrEnemy.pos.x + anyPlayerOrEnemy.frame.width + 10,
       y: anyPlayerOrEnemy.pos.y + anyPlayerOrEnemy.frame.height / 2,
@@ -155,7 +159,7 @@
       disappear: false,
       explode: false,
     }
-    this.color = 'black';
+    this.color = color || 'black';
   };
 
   Projectile.prototype = {
@@ -172,8 +176,8 @@
   },
 
     // makes new projectile
-    createNew: function (anyPlayerOrEnemy) {
-      var projectile = new Projectile(anyPlayerOrEnemy);
+    createNew: function (anyPlayerOrEnemy, color) {
+      var projectile = new Projectile(anyPlayerOrEnemy, color);
       bodies.push(projectile);
     },
 
@@ -186,6 +190,136 @@
       }
     },
   };
+
+  function Enemy(totalHealth, currentHealth) {
+    this.health = {
+      total: totalHealth,
+      current: currentHealth,
+      percent: (currentHealth / totalHealth) * 100
+    };
+
+    this.animation = {
+      x: 0,
+      y: 0
+    };
+
+    this.pos = {
+      x: screenWidth / 2 - ((500 / 9) / 2),
+      y: screenHeight / 2 - ((519 / 8) / 2)
+    };
+
+    this.speed = 1;
+    this.avatar = null;
+  }
+
+  Enemy.prototype.spritesheet = function (url, spritesheetX, spritesheetY, framesPerLine, amountOfRows, frameWidth, frameHeight, start, current, next, end) {
+     if (!(spritesheetX && spritesheetY)) {
+       console.error("Error: .loadSpritesheet() requires at least parameters (spritesheetX, spritesheetY)");
+     } else {
+         this.spritesheet = {
+         width: spritesheetX,
+         height: spritesheetX,
+       }
+
+       this.animation = {
+         x: 0,
+         y: 0
+       }
+
+       this.frame = {
+         total: framesPerLine,
+         amountOfRows: amountOfRows,
+         currentRow: 0,
+         width: frameWidth || spritesheetX / this.frame.total,
+         height: frameHeight || spritesheetY / this.frame.amountOfRows,
+         start: start || 0,
+         current: current | 0,
+         next: next || 1,
+         end: end || totalPerLine,
+       }
+
+     }
+
+   }
+
+var action;
+var actionTimesTen;
+  Enemy.prototype.update = function (timeBetweenFrames) {
+    if (actionTimesTen > 0 && actionTimesTen < 1.25) {
+      this.pos.x -= this.speed * timeBetweenFrames * .1;
+      this.pos.y -= this.speed * timeBetweenFrames * .1;
+      // this.animation.y = this.frame.current * this.frame.height;
+      bodies[1] = this;
+    } else if (actionTimesTen >= 1.25 && actionTimesTen < 2.50) {
+      this.pos.x += this.speed * timeBetweenFrames * .1;
+      this.pos.y -= this.speed * timeBetweenFrames * .1;
+      // this.animation.y = this.frame.current * this.frame.height;
+      bodies[1] = this;
+    } else if (actionTimesTen >= 2.50 && actionTimesTen < 3.75) {
+      this.pos.x -= this.speed * timeBetweenFrames * .1;
+      this.pos.y += this.speed * timeBetweenFrames * .1;
+      // this.animation.y = this.frame.current * this.frame.height;
+      bodies[1] = this;
+    } else if (actionTimesTen >= 3.75 && actionTimesTen < 5) {
+      this.pos.x += this.speed * timeBetweenFrames * .1;
+      this.pos.y += this.speed * timeBetweenFrames * .1;
+      // this.animation.y = this.frame.current * this.frame.height;
+      bodies[1] = this;
+    } else if (actionTimesTen >= 5 && actionTimesTen < 6.250) {
+      // this.animation.y = this.frame.current * this.frame.height;
+      this.pos.y -= this.speed * timeBetweenFrames * .1;
+      bodies[1] = this;
+    } else if (actionTimesTen >= 6.250 && actionTimesTen < 7.500) {
+      // this.animation.y = this.frame.current * this.frame.height;
+      this.pos.y += this.speed * timeBetweenFrames * .1;
+      bodies[1] = this;
+    } else if (actionTimesTen >= 7.500 && actionTimesTen < 8.750) {
+      // this.animation.y = this.frame.current * this.frame.height;
+      this.pos.x -= this.speed * timeBetweenFrames * .001;
+      bodies[1] = this;
+    } else if (actionTimesTen >= 8.750 && actionTimesTen < 9) {
+      //this.animation.y = this.frame.current * this.frame.height;
+      this.pos.x += this.speed * timeBetweenFrames * .001;
+      bodies[1] = this;
+    } else if (actionTimesTen >= 9 && actionTimesTen <= 10) {
+      // pushes a new Projectile() object onto the projectiles array
+      projectile.createNew(this, 'red');
+      console.log(projectiles.length);
+      console.log("firing projectiles!");
+    } else {
+
+      console.log('Dragon is stationary');
+    }
+  }
+
+  Enemy.prototype.draw = function (url) {
+    csv.drawImage(
+      url,
+      this.frame.width * this.frame.current,
+      this.animation.y,
+      this.frame.width, this.frame.height,
+      this.pos.x, this.pos.y,
+      this.frame.width, this.frame.height
+    );
+  }
+
+  Enemy.prototype.isColliding = function() {
+    for (var i = 0; i < bodies.length; i++) {
+      if (bodies[i] instanceof Projectile) {
+      if ($GAME.collisionDetection(dragon, bodies[i]) === false) {
+        dragon.health.percent -= .25;
+        console.log('collision!');
+        drawHitBox('red');
+        console.log(player.health.percent);
+        console.log(playerHealth.width);
+      }
+    }
+  }
+  };
+
+var dragon = new Enemy(100, 100);
+dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
+
 
   /**
    * healthbar varructor
@@ -238,16 +372,16 @@
   var projectile = new Projectile(player);
 
   bodies[0] = player;
+  bodies[1] = dragon;
   console.log(bodies.indexOf(player));
 
   function drawHitBox(color) {
       csv.strokeStyle = color;
       csv.fillStyle = 'blue';
       csv.font = '30px Cambria';
-      csv.fillText('Player hitbox(red = collision): ', 10, 30);
+      csv.fillText('Defeat the dragon using projectiles (space bar)!', 10, 30);
       // for the key on the top-left
       for (var i = 0; i < bodies.length; i++) {
-        console.log(bodies[i] + "!!!");
         // for players, since they have .frame
         // in the future, remove player.frame.width, just use player.width
         if (bodies[i] instanceof Player) {
@@ -256,6 +390,8 @@
 
           // for projectiles, since they don't have .frame
           // csv.strokeRect(bodies[i].pos.x - 5, bodies[i].pos.y - 5, bodies[i].width + 10, bodies[i].height + 10);
+        } else if (bodies[i] instanceof Enemy) {
+          csv.strokeRect(bodies[i].pos.x, bodies[i].pos.y, bodies[i].frame.width, bodies[i].frame.height);
         } else {
           console.error("Can't draw " + bodies[i] + ", check for a width and a height");
         }
@@ -273,12 +409,17 @@
     drawHitBox('black');
     player.update(timeBetweenFrames);
     player.isColliding();
+    dragon.isColliding();
     $GAME.nextFrame(player);
-    player.health.percent -= .1;
     playerHealth.update(player);
     playerHealth.drawBar(player);
+    dragonHealth.drawBar(dragon);
+    dragonHealth.update(dragon);
     projectile.draw(projectiles, csv);
     projectile.update(projectiles);
+    dragon.draw(dragonurl);
+    $GAME.nextFrame(dragon);
+    dragon.update(timeBetweenFrames);
   }
 
   /**
@@ -287,6 +428,9 @@
   function tick() {
     if (player.health.percent <= 0) {
       console.log('You ran out of health! You lose!');
+      return
+    } else if (dragon.health.percent <= 0) {
+      console.log('You have defeated the dragon! You win!');
     } else {
       requestAnimationFrame(tick);
       now = Date.now();
@@ -294,6 +438,8 @@
       if (elapsed > fpsInterval) {
         then = now - (elapsed % fpsInterval);
         updateEverythingThenDraw(elapsed);
+        action = Math.random();
+        actionTimesTen = (action * 10);
       }
     }
   }
@@ -312,11 +458,12 @@
 
   player = new Player(100, 100);
   playerHealth = new Healthbar(200, 10, 'green', player);
+  var dragonHealth = new Healthbar(200, 10, 'green', dragon);
   player.avatar = new Image();
   // projectile = new Projectile(player);
 
   player.avatar.onload = function() {
-    startGame(30);
+      startGame(30);
   };
 
   player.avatar.onerror = function() {

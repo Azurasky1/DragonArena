@@ -27,10 +27,10 @@
       // taken from (https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage)
       graph.drawImage(
         player.avatar,
-        player.frame.width * player.frame.currentFrame,
+        player.frame.width * player.frame.current,
         player.animation.y,
         player.frame.width, player.frame.height, // clip size -S
-        player.pos.x, player.pos.y, // centered on canvas
+        player.pos.x, player.pos.y, // centered on canvass
         player.frame.width, player.frame.height // image size to draw
       );
     }
@@ -41,10 +41,10 @@
      * @param  {Object} el [description]
      */
     function nextFrame(el) {
-      if (el.frame.currentFrame < el.frame.frames - 1) {
-        el.frame.currentFrame += 1;
+      if (el.frame.current < el.frame.total - 1) {
+        el.frame.current += 1;
       } else {
-        el.frame.currentFrame = 0;
+        el.frame.current = 0;
       }
     }
 
@@ -95,6 +95,30 @@
       bodies[i].update;
       }
     }
+
+  function Spritesheet (spritesheetX, spritesheetY, framesPerLine, amountOfRows, frameWidth, frameHeight, start, current, next, end) {
+     if (!(spritesheetX && spritesheetY)) {
+       console.error("Error: .loadSpritesheet() requires at least parameters (spritesheetX, spritesheetY)");
+     } else {
+         this.spritesheet = {
+         width: spritesheetX,
+         height: spritesheetX,
+       }
+
+       this.frame = {
+         perLine: framesPerLine,
+         amountOfRows: amountOfRows,
+         width: frameWidth || spritesheetX / this.frame.perLine,
+         height: frameHeight || spritesheetY / this.frame.amountOfRows,
+         start: start || 0,
+         current: current | 0,
+         next: next || 1,
+         end: end || totalPerLine,
+       }
+
+     }
+
+   }
 
     self.drawPlayer = drawPlayer;
     self.drawBoard = drawBoard;
