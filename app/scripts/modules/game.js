@@ -1,9 +1,6 @@
 (function(global) {
   'use strict';
 
-  var screenWidth = document.body.offsetWidth;
-  var screenHeight = document.body.offsetHeight;
-
   /**
    * [game description]
    */
@@ -15,17 +12,19 @@
       background: '#FAFAFA'
     };
 
+    var screenHeight = document.body.offsetHeight;
+    var screenWidth = document.body.offsetWidth;
+
     // public scope
 
     /**
      * [drawPlayer description]
      *
-     * @param  {Object} graph  [description]
-     * @param  {Object} player [description]
+     * @param  {Object} game  [description]
      */
-    function drawPlayer(graph, player) {
+    function drawPlayer(canvas, player) {
       // taken from (https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage)
-      graph.drawImage(
+      canvas.drawImage(
         player.avatar,
         player.frame.width * player.frame.current,
         player.animation.y,
@@ -33,6 +32,7 @@
         player.pos.x, player.pos.y, // centered on canvass
         player.frame.width, player.frame.height // image size to draw
       );
+
     }
 
     /**
@@ -51,13 +51,17 @@
     /**
      * [drawBoard description]
      *
-     * @param  {Object} canvas [description]
+     * @param  {Object} game [description]
      */
     function drawBoard(canvas) {
       // added clearRect so that we don't keep drawing over the canvas
-      canvas.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.clearRect(0, 0,
+                        screenWidth,
+                        screenHeight);
       canvas.fillStyle = _board.background;
-      canvas.fillRect(0, 0, screenWidth, screenHeight);
+      canvas.fillRect(0, 0,
+                        screenWidth,
+                        screenHeight);
     }
 
     function collisionDetection(body1, body2) {
@@ -95,30 +99,6 @@
       bodies[i].update;
       }
     }
-
-  function Spritesheet (spritesheetX, spritesheetY, framesPerLine, amountOfRows, frameWidth, frameHeight, start, current, next, end) {
-     if (!(spritesheetX && spritesheetY)) {
-       console.error("Error: .loadSpritesheet() requires at least parameters (spritesheetX, spritesheetY)");
-     } else {
-         this.spritesheet = {
-         width: spritesheetX,
-         height: spritesheetX,
-       }
-
-       this.frame = {
-         perLine: framesPerLine,
-         amountOfRows: amountOfRows,
-         width: frameWidth || spritesheetX / this.frame.perLine,
-         height: frameHeight || spritesheetY / this.frame.amountOfRows,
-         start: start || 0,
-         current: current | 0,
-         next: next || 1,
-         end: end || totalPerLine,
-       }
-
-     }
-
-   }
 
     self.drawPlayer = drawPlayer;
     self.drawBoard = drawBoard;

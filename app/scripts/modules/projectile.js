@@ -29,13 +29,15 @@
   };
 
   // makes new projectile
-  Projectile.prototype.createNew = function(anyPlayerOrEnemy, projectiles) {
+  Projectile.prototype.createNew = function(anyPlayerOrEnemy, projectiles, color) {
     var projectile = new Projectile(anyPlayerOrEnemy);
 
     projectile.pos = {
       x: anyPlayerOrEnemy.pos.x + anyPlayerOrEnemy.frame.width + 10,
       y: anyPlayerOrEnemy.pos.y + anyPlayerOrEnemy.frame.height / 2
     };
+
+    projectile.color = color;
 
     projectiles.push(projectile);
   };

@@ -17,6 +17,7 @@
   var projectiles = [];
   var playerHealth;
   var dragonurl;
+  var bodies = [];
 
   dragonurl = new Image();
   dragonurl.src = '/images/dragon.png';
@@ -122,7 +123,7 @@
       bodies[0] = this;
     } else if (keyState[KEY_SPACE]) {
       // pushes a new Projectile() object onto the projectiles array
-      projectile.createNew(this);
+      $PROJECTILE.createNew(this, projectiles, 'black');
       console.log(projectiles.length);
     } else {
       // console.log('No keys being pressed right now');
@@ -130,17 +131,16 @@
   };
 
   Player.prototype.isColliding = function() {
-    for (var i = 0; i < bodies.length; i++) {
-      if (bodies[i] instanceof Projectile) {
-      if ($GAME.collisionDetection(player, bodies[i]) === false) {
+    for (var i = 0; i < projectiles.length; i++) {
+      var projectile = projectiles[i];
+      if ($GAME.collisionDetection(this, projectile) === false) {
         player.health.percent -= 1;
         console.log('collision!');
-        drawHitBox('red');
-        console.log(player.health.percent);
+        drawHitBox(csv, bodies, 'red');
+        console.log(this.health.percent);
         console.log(playerHealth.width);
       }
     }
-  }
   };
 
   function Projectile(anyPlayerOrEnemy, color) {
@@ -160,35 +160,6 @@
       explode: false,
     }
     this.color = color || 'black';
-  };
-
-  Projectile.prototype = {
-    draw: function () {
-      for (var i = 0; i < bodies.length; i++) {
-        if (bodies[i] instanceof Projectile) {
-        csv.clearRect(bodies[i].pos.x, bodies[i].pos.y,
-        bodies[i].width, bodies[i].height);
-        csv.fillStyle = bodies[i].color;
-        csv.fillRect(bodies[i].pos.x, bodies[i].pos.y,
-        bodies[i].width, bodies[i].height);
-      }
-    }
-  },
-
-    // makes new projectile
-    createNew: function (anyPlayerOrEnemy, color) {
-      var projectile = new Projectile(anyPlayerOrEnemy, color);
-      bodies.push(projectile);
-    },
-
-    update: function () {
-      for (var i = 0; i < bodies.length; i++) {
-        if (bodies[i] instanceof Projectile) {
-        bodies[i].pos.x += bodies[i].velocity.x;
-        bodies[i].pos.y += bodies[i].velocity.y;
-        }
-      }
-    },
   };
 
   function Enemy(totalHealth, currentHealth) {
@@ -283,7 +254,7 @@ var actionTimesTen;
       bodies[1] = this;
     } else if (actionTimesTen >= 9 && actionTimesTen <= 10) {
       // pushes a new Projectile() object onto the projectiles array
-      projectile.createNew(this, 'red');
+      $PROJECTILE.createNew(this, projectiles, 'red');
       console.log(projectiles.length);
       console.log("firing projectiles!");
     } else {
@@ -292,7 +263,7 @@ var actionTimesTen;
     }
   }
 
-  Enemy.prototype.draw = function (url) {
+  Enemy.prototype.draw = function (url, canvas) {
     csv.drawImage(
       url,
       this.frame.width * this.frame.current,
@@ -304,16 +275,13 @@ var actionTimesTen;
   }
 
   Enemy.prototype.isColliding = function() {
-    for (var i = 0; i < bodies.length; i++) {
-      if (bodies[i] instanceof Projectile) {
-      if ($GAME.collisionDetection(dragon, bodies[i]) === false) {
-        dragon.health.percent -= .25;
+    for (var i = 0; i < projectiles.length; i++) {
+      if ($GAME.collisionDetection(this, projectiles[i]) === false) {
+        this.health.percent -= .25;
         console.log('collision!');
-        drawHitBox('red');
+        drawHitBox(csv, bodies, 'red');
         console.log(player.health.percent);
-        console.log(playerHealth.width);
       }
-    }
   }
   };
 
@@ -375,7 +343,8 @@ dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
   bodies[1] = dragon;
   console.log(bodies.indexOf(player));
 
-  function drawHitBox(color) {
+  function drawHitBox(canvas, bodies, color) {
+    console.log(bodies);
       csv.strokeStyle = color;
       csv.fillStyle = 'blue';
       csv.font = '30px Cambria';
@@ -386,7 +355,7 @@ dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
         // in the future, remove player.frame.width, just use player.width
         if (bodies[i] instanceof Player) {
           csv.strokeRect(bodies[i].pos.x, bodies[i].pos.y, bodies[i].frame.width, bodies[i].frame.height);
-        } else if (bodies[i] instanceof Projectile) {
+        } else if (bodies[i].width) {
 
           // for projectiles, since they don't have .frame
           // csv.strokeRect(bodies[i].pos.x - 5, bodies[i].pos.y - 5, bodies[i].width + 10, bodies[i].height + 10);
@@ -406,7 +375,7 @@ dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
   function updateEverythingThenDraw(timeBetweenFrames) {
     $GAME.drawBoard(csv);
     $GAME.drawPlayer(csv, player);
-    drawHitBox('black');
+    drawHitBox(csv, bodies, 'black');
     player.update(timeBetweenFrames);
     player.isColliding();
     dragon.isColliding();
@@ -415,8 +384,8 @@ dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
     playerHealth.drawBar(player);
     dragonHealth.drawBar(dragon);
     dragonHealth.update(dragon);
-    projectile.draw(projectiles, csv);
-    projectile.update(projectiles);
+    $PROJECTILE.draw(projectiles, csv);
+    $PROJECTILE.update(projectiles);
     dragon.draw(dragonurl);
     $GAME.nextFrame(dragon);
     dragon.update(timeBetweenFrames);
