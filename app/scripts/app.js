@@ -18,11 +18,18 @@
   var playerHealth;
   var dragonurl;
   var bodies = [];
-
+  var action;
+  var actionTimesTen;
   dragonurl = new Image();
   dragonurl.src = '/images/dragon.png';
+  var counter = 0;
+
+  action = Math.random();
+  actionTimesTen = (action * 10);
+
   // keeps track of which keys are pressed
   var keyState = [];
+
   window.bodies = [];
 
   // set the canvas to the full page size
@@ -68,6 +75,18 @@
       y: 0
     };
 
+    this.direction = {
+      facing: '',
+      north: 0,
+      south: 0,
+      east: 0,
+      west: 0,
+      northEast: 0,
+      northWest :0,
+      southEast: 0,
+      southWest: 0,
+    };
+
     this.frame = {
       current: 0,
       total: 9,
@@ -84,61 +103,118 @@
     this.avatar = null;
   }
 
-  Player.prototype.update = function(timeBetweenFrames) {
+  function move (anyPlayerOrEnemy, elapsed) {
+    switch(anyPlayerOrEnemy.direction.facing) {
+
+    case anyPlayerOrEnemy.direction.northWest: {
+      anyPlayerOrEnemy.pos.x -= anyPlayerOrEnemy.speed * elapsed;
+      anyPlayerOrEnemy.pos.y -= anyPlayerOrEnemy.speed * elapsed;
+    }
+    break;
+
+    case anyPlayerOrEnemy.direction.northEast: {
+      anyPlayerOrEnemy.pos.x += anyPlayerOrEnemy.speed * elapsed;
+      anyPlayerOrEnemy.pos.y -= anyPlayerOrEnemy.speed * elapsed;
+    }
+    break;
+
+    case anyPlayerOrEnemy.direction.southWest: {
+      anyPlayerOrEnemy.pos.x -= anyPlayerOrEnemy.speed * elapsed;
+      anyPlayerOrEnemy.pos.y += anyPlayerOrEnemy.speed * elapsed;
+    }
+    break;
+
+    case anyPlayerOrEnemy.direction.southEast: {
+      anyPlayerOrEnemy.pos.x += anyPlayerOrEnemy.speed * elapsed;
+      anyPlayerOrEnemy.pos.y += anyPlayerOrEnemy.speed * elapsed;
+    }
+    break;
+
+    case anyPlayerOrEnemy.direction.north: {
+      anyPlayerOrEnemy.pos.y -= anyPlayerOrEnemy.speed * elapsed;
+    }
+    break;
+
+    case anyPlayerOrEnemy.direction.south: {
+      anyPlayerOrEnemy.pos.y += anyPlayerOrEnemy.speed * elapsed;
+    }
+    break;
+
+    case  anyPlayerOrEnemy.direction.west: {
+      anyPlayerOrEnemy.pos.x -= anyPlayerOrEnemy.speed * elapsed;
+    }
+    break;
+
+    case anyPlayerOrEnemy.direction.east: {
+      anyPlayerOrEnemy.pos.x += anyPlayerOrEnemy.speed * elapsed;
+    }
+    break;
+
+  }
+  }
+  
+  Player.prototype.update = function(anyPlayerOrEnemyelapsed) {
     if (keyState[KEY_UP] && keyState[KEY_LEFT]) {
-      this.pos.x -= this.speed * timeBetweenFrames;
-      this.pos.y -= this.speed * timeBetweenFrames;
-      this.animation.y = 0;
+      this.pos.x -= this.speed * elapsed;
+      this.pos.y -= this.speed * elapsed;
+      console.log(this.direction.facing);
+      this.direction.facing = this.direction.northWest;
+      console.log(this.direction.facing);
+      this.animation.y = this.direction.facing;
+      console.log(this.animation.y);
+      console.log(this);
+      console.log(this);
       bodies[0] = this;
     } else if (keyState[KEY_UP] && keyState[KEY_RIGHT]) {
-      this.pos.x += this.speed * timeBetweenFrames;
-      this.pos.y -= this.speed * timeBetweenFrames;
-      this.animation.y = 130;
+      this.direction.facing = this.direction.northEast;
+      this.animation.y = this.direction.facing;
+      move(this, elapsed);
       bodies[0] = this;
     } else if (keyState[KEY_DOWN] && keyState[KEY_LEFT]) {
-      this.pos.x -= this.speed * timeBetweenFrames;
-      this.pos.y += this.speed * timeBetweenFrames;
-      this.animation.y = 327;
+      this.direction.facing = this.direction.southWest;
+      this.animation.y = this.direction.facing;
+      move(this, elapsed);
       bodies[0] = this;
     } else if (keyState[KEY_DOWN] && keyState[KEY_RIGHT]) {
-      this.pos.x += this.speed * timeBetweenFrames;
-      this.pos.y += this.speed * timeBetweenFrames;
-      this.animation.y = 454;
+      this.direction.facing = this.direction.southEast;
+      this.animation.y = this.direction.facing;
+      move(this, elapsed);
       bodies[0] = this;
     } else if (keyState[KEY_UP]) {
-      this.animation.y = 65;
-      this.pos.y -= this.speed * timeBetweenFrames;
+      this.direction.facing = this.direction.north;
+      this.animation.y = this.direction.facing;
+      move(this, elapsed);
       bodies[0] = this;
     } else if (keyState[KEY_DOWN]) {
-      this.animation.y = 391;
-      this.pos.y += this.speed * timeBetweenFrames;
+      this.direction.facing = this.direction.south;
+      this.animation.y = this.direction.facing;
+      move(this, elapsed);
       bodies[0] = this;
     } else if (keyState[KEY_LEFT]) {
-      this.animation.y = 260;
-      this.pos.x -= this.speed * timeBetweenFrames;
+      this.direction.facing = this.direction.west;
+      this.animation.y = this.direction.facing;
+      move(this, elapsed);
       bodies[0] = this;
     } else if (keyState[KEY_RIGHT]) {
-      this.animation.y = 194;
-      this.pos.x += this.speed * timeBetweenFrames;
+      this.direction.facing = this.direction.east;
+      this.animation.y = this.direction.facing;
+      move(this, elapsed);
       bodies[0] = this;
     } else if (keyState[KEY_SPACE]) {
       // pushes a new Projectile() object onto the projectiles array
       $PROJECTILE.createNew(this, projectiles, 'black');
-      console.log(projectiles.length);
     } else {
       // console.log('No keys being pressed right now');
     }
   };
 
-  Player.prototype.isColliding = function() {
+  Player.prototype.isColliding = function(projectiles) {
     for (var i = 0; i < projectiles.length; i++) {
-      var projectile = projectiles[i];
-      if ($GAME.collisionDetection(this, projectile) === false) {
+      if ($GAME.collisionDetection(this, projectiles[i]) === false) {
         player.health.percent -= 1;
-        console.log('collision!');
+        console.log("x: " + this.pos.x + ", y: " + this.pos.y + ", width: " + this.frame.width + ", height: " + this.frame.height);
+        console.log("projectile x: " + projectiles[i].pos.x + ", y: " + projectiles[i].pos.y + ", width: " + projectiles[i].width + ", height: " + projectiles[i].height);
         drawHitBox(csv, bodies, 'red');
-        console.log(this.health.percent);
-        console.log(playerHealth.width);
       }
     }
   };
@@ -171,7 +247,18 @@
 
     this.animation = {
       x: 0,
-      y: 0
+      y: 0,
+    };
+    this.direction = {
+      facing: '',
+      north: 0,
+      south: 0,
+      east: 0,
+      west: 0,
+      northEast: 0,
+      northWest :0,
+      southEast: 0,
+      southWest: 0,
     };
 
     this.pos = {
@@ -179,86 +266,88 @@
       y: screenHeight / 2 - ((519 / 8) / 2)
     };
 
-    this.speed = 1;
+    this.speed = .05;
     this.avatar = null;
   }
 
-  Enemy.prototype.spritesheet = function (url, spritesheetX, spritesheetY, framesPerLine, amountOfRows, frameWidth, frameHeight, start, current, next, end) {
+  function getDirectionPositions (anyPlayerOrEnemy, first, second, third, fourth, fifth, sixth, seventh, eigth) {
+    anyPlayerOrEnemy.direction[first] = 0;
+    anyPlayerOrEnemy.direction[second] = anyPlayerOrEnemy.frame.height;
+    anyPlayerOrEnemy.direction[third] = anyPlayerOrEnemy.frame.height * 2;
+    anyPlayerOrEnemy.direction[fourth] = anyPlayerOrEnemy.frame.height * 3;
+    anyPlayerOrEnemy.direction[fifth] = anyPlayerOrEnemy.frame.height * 4;
+    anyPlayerOrEnemy.direction[sixth] = anyPlayerOrEnemy.frame.height * 5;
+    anyPlayerOrEnemy.direction[seventh] = anyPlayerOrEnemy.frame.height * 6;
+    anyPlayerOrEnemy.direction[eigth] = anyPlayerOrEnemy.frame.height * 7;
+  }
+
+  window.spritesheet = function (url, spritesheetX, spritesheetY, framesPerLine, amountOfRows, frameWidth, frameHeight, start, current, next, end) {
      if (!(spritesheetX && spritesheetY)) {
        console.error("Error: .loadSpritesheet() requires at least parameters (spritesheetX, spritesheetY)");
      } else {
-         this.spritesheet = {
+         url.spritesheet = {
          width: spritesheetX,
          height: spritesheetX,
        }
 
-       this.animation = {
+       url.animation = {
          x: 0,
          y: 0
        }
 
-       this.frame = {
+       url.frame = {
          total: framesPerLine,
          amountOfRows: amountOfRows,
          currentRow: 0,
-         width: frameWidth || spritesheetX / this.frame.total,
-         height: frameHeight || spritesheetY / this.frame.amountOfRows,
+         width: frameWidth || spritesheetX / framesPerLine,
+         height: frameHeight || spritesheetY / amountOfRows,
          start: start || 0,
          current: current | 0,
          next: next || 1,
-         end: end || totalPerLine,
+         end: end || framesPerLine,
        }
 
      }
 
    }
 
-var action;
-var actionTimesTen;
-  Enemy.prototype.update = function (timeBetweenFrames) {
+  Enemy.prototype.update = function (elapsed) {
     if (actionTimesTen > 0 && actionTimesTen < 1.25) {
-      this.pos.x -= this.speed * timeBetweenFrames * .1;
-      this.pos.y -= this.speed * timeBetweenFrames * .1;
-      // this.animation.y = this.frame.current * this.frame.height;
+      this.direction.facing = this.direction.northWest;
+      this.animation.y = this.direction.facing;
       bodies[1] = this;
     } else if (actionTimesTen >= 1.25 && actionTimesTen < 2.50) {
-      this.pos.x += this.speed * timeBetweenFrames * .1;
-      this.pos.y -= this.speed * timeBetweenFrames * .1;
-      // this.animation.y = this.frame.current * this.frame.height;
+      this.direction.facing = this.direction.northEast;
+      this.animation.y = this.direction.facing;
       bodies[1] = this;
     } else if (actionTimesTen >= 2.50 && actionTimesTen < 3.75) {
-      this.pos.x -= this.speed * timeBetweenFrames * .1;
-      this.pos.y += this.speed * timeBetweenFrames * .1;
-      // this.animation.y = this.frame.current * this.frame.height;
+      this.direction.facing = this.direction.southWest;
+      this.animation.y = this.direction.facing;
       bodies[1] = this;
     } else if (actionTimesTen >= 3.75 && actionTimesTen < 5) {
-      this.pos.x += this.speed * timeBetweenFrames * .1;
-      this.pos.y += this.speed * timeBetweenFrames * .1;
-      // this.animation.y = this.frame.current * this.frame.height;
+      this.direction.facing = this.direction.southEast;
+      this.animation.y = this.direction.facing;
       bodies[1] = this;
     } else if (actionTimesTen >= 5 && actionTimesTen < 6.250) {
-      // this.animation.y = this.frame.current * this.frame.height;
-      this.pos.y -= this.speed * timeBetweenFrames * .1;
+      this.direction.facing = this.direction.north;
+      this.animation.y = this.direction.facing;
       bodies[1] = this;
     } else if (actionTimesTen >= 6.250 && actionTimesTen < 7.500) {
-      // this.animation.y = this.frame.current * this.frame.height;
-      this.pos.y += this.speed * timeBetweenFrames * .1;
+      this.direction.facing = this.direction.south;
+      this.animation.y = this.direction.facing;
       bodies[1] = this;
     } else if (actionTimesTen >= 7.500 && actionTimesTen < 8.750) {
-      // this.animation.y = this.frame.current * this.frame.height;
-      this.pos.x -= this.speed * timeBetweenFrames * .001;
+      this.direction.facing = this.direction.west;
+      this.animation.y = this.direction.facing;
       bodies[1] = this;
     } else if (actionTimesTen >= 8.750 && actionTimesTen < 9) {
-      //this.animation.y = this.frame.current * this.frame.height;
-      this.pos.x += this.speed * timeBetweenFrames * .001;
+      this.direction.facing = this.direction.east;
+      this.animation.y = this.direction.facing;
       bodies[1] = this;
     } else if (actionTimesTen >= 9 && actionTimesTen <= 10) {
       // pushes a new Projectile() object onto the projectiles array
       $PROJECTILE.createNew(this, projectiles, 'red');
-      console.log(projectiles.length);
-      console.log("firing projectiles!");
     } else {
-
       console.log('Dragon is stationary');
     }
   }
@@ -266,15 +355,15 @@ var actionTimesTen;
   Enemy.prototype.draw = function (url, canvas) {
     csv.drawImage(
       url,
-      this.frame.width * this.frame.current,
-      this.animation.y,
+      (this.frame.width) * this.frame.current,
+      this.direction.facing,
       this.frame.width, this.frame.height,
       this.pos.x, this.pos.y,
       this.frame.width, this.frame.height
     );
   }
 
-  Enemy.prototype.isColliding = function() {
+  Enemy.prototype.isColliding = function(projectiles) {
     for (var i = 0; i < projectiles.length; i++) {
       if ($GAME.collisionDetection(this, projectiles[i]) === false) {
         this.health.percent -= .25;
@@ -285,9 +374,12 @@ var actionTimesTen;
   }
   };
 
+var player = new Player(100, 100);
 var dragon = new Enemy(100, 100);
-dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
-
+window.spritesheet(dragon, 750, 560, 10, 8);
+window.spritesheet(player, 500, 519, 9, 8);
+getDirectionPositions(dragon, ['east'], ['southEast'], ['south'], ['southWest'], ['west'], ['northWest'], ['north'], ['northEast']);
+getDirectionPositions(player, ['northWest'], ['north'], ['northEast'], ['east'], ['west'], ['southWest'], ['south'], ['southEast'])
 
   /**
    * healthbar varructor
@@ -335,16 +427,13 @@ dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
     this.width = anyPlayerOrEnemy.health.percent * 2;
   };
 
-  var player = new Player(100, 100);
   var playerHealth = new Healthbar(200, 10, 'green', player);
   var projectile = new Projectile(player);
 
   bodies[0] = player;
   bodies[1] = dragon;
-  console.log(bodies.indexOf(player));
 
   function drawHitBox(canvas, bodies, color) {
-    console.log(bodies);
       csv.strokeStyle = color;
       csv.fillStyle = 'blue';
       csv.font = '30px Cambria';
@@ -370,15 +459,15 @@ dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
   /**
    * [updateEverythingThenDraw description]
    *
-   * @param  {Number} timeBetweenFrames [description]
+   * @param  {Number} elapsed [description]
    */
-  function updateEverythingThenDraw(timeBetweenFrames) {
+  function updateEverythingThenDraw(elapsed) {
     $GAME.drawBoard(csv);
     $GAME.drawPlayer(csv, player);
     drawHitBox(csv, bodies, 'black');
-    player.update(timeBetweenFrames);
-    player.isColliding();
-    dragon.isColliding();
+    player.update(elapsed);
+    player.isColliding(projectiles);
+    dragon.isColliding(projectiles);
     $GAME.nextFrame(player);
     playerHealth.update(player);
     playerHealth.drawBar(player);
@@ -388,7 +477,7 @@ dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
     $PROJECTILE.update(projectiles);
     dragon.draw(dragonurl);
     $GAME.nextFrame(dragon);
-    dragon.update(timeBetweenFrames);
+    move(dragon, elapsed);
   }
 
   /**
@@ -397,13 +486,19 @@ dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
   function tick() {
     if (player.health.percent <= 0) {
       console.log('You ran out of health! You lose!');
-      return
+      return;
     } else if (dragon.health.percent <= 0) {
       console.log('You have defeated the dragon! You win!');
     } else {
       requestAnimationFrame(tick);
       now = Date.now();
       elapsed = now - then;
+      counter++;
+      if (counter === 60) {
+        dragon.update();
+        console.log("changing direction!");
+        counter = 0;
+      }
       if (elapsed > fpsInterval) {
         then = now - (elapsed % fpsInterval);
         updateEverythingThenDraw(elapsed);
@@ -421,11 +516,12 @@ dragon.spritesheet(dragonurl, 750, 560, 10, 8, 76, 80, 0, 0, 1, 8);
   function startGame(fps) {
     fpsInterval = 1000 / fps;
     then = Date.now();
-
+    dragon.update();
+    console.log(dragon.direction);
+    move(dragon, 4);
     tick();
   }
 
-  player = new Player(100, 100);
   playerHealth = new Healthbar(200, 10, 'green', player);
   var dragonHealth = new Healthbar(200, 10, 'green', dragon);
   player.avatar = new Image();
