@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Azurasky1/2dgame#readme",
   "devDependencies": {
+    "autoprefixer": "^6.3.6",
     "browser-sync": "^2.13.0",
     "del": "^2.2.0",
     "eslint": "^2.12.0",
@@ -29,9 +30,12 @@
     "eslint-plugin-import": "^1.8.1",
     "express": "^4.13.4",
     "gulp": "^3.9.1",
+    "gulp-postcss": "^6.1.1",
     "gulp-sass": "^2.3.1",
+    "gulp-sourcemaps": "^1.6.0",
     "http": "0.0.0",
     "pkginfo": "^0.4.0",
+    "postcss-import": "^8.1.2",
     "run-sequence": "^1.2.1",
     "socket.io": "^1.4.6"
   },
@@ -41,10 +45,11 @@
       "browser": true,
       "node": true
     },
+    "rules": {
+      "require-jsdoc": 1,
+      "key-spacing": 0
+    },
     "globals": {
-      "window": true,
-      "$GAME": true,
-      "$PROJECTILE": true
     }
   }
 }

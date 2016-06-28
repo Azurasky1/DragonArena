@@ -1,23 +1,57 @@
+/**
+ * Material Design Lite Starter Kit
+ * Copyright (c) 2016 by andreasonny83. All Rights Reserved.
+ * This code may only be used under the MIT style license.
+ *
+ * MIT license: https://opensource.org/licenses/mit-license.php
+*/
 const gulp = require('gulp');
-const sass = require('gulp-sass');
 const del = require('del');
+var postcss = require('gulp-postcss');
+var sourcemaps = require('gulp-sourcemaps');
 const runSequence = require('run-sequence');
 const browserSync = require('browser-sync').create();
+
+/**
+ * autoprefixer settings
+ *
+ * @type {Array}
+ */
+const autoprefixer = [
+  'last 2 versions',
+  'safari >= 7',
+  'ie >= 9',
+  'ff >= 30',
+  'ios 6',
+  'android 4'
+];
+
+/**
+ * PostCSS processors
+ *
+ * @type {Array}
+ */
+const processors = [
+  require('autoprefixer'),
+  require('autoprefixer')({browsers: autoprefixer}),
+  require('postcss-import')
+];
 
 function clean() {
   return del([
     './.tmp',
     './dist'
   ]).then(function(paths) {
-  	console.log('Deleted files and folders:\n', paths.join('\n'));
+    console.log('Deleted files and folders:\n', paths.join('\n'));
   });
 }
 
 function _browserSync() {
   browserSync.init({
     server: {
-      baseDir: "./.tmp"
-    }
+      baseDir: './.tmp'
+    },
+    port: 5001
   });
 }
 
@@ -30,21 +64,26 @@ function copyFiles() {
   .pipe(gulp.dest('.tmp'));
 }
 
-function sassDev() {
-  return gulp.src('./app/styles/**/*.scss')
-    .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('./.tmp/styles'));
+function styles() {
+  return gulp.src('./app/styles/*.css')
+    .pipe(sourcemaps.init())
+    .pipe(postcss(processors))
+    .on('error', console.log)
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./.tmp/styles'))
+    .pipe(browserSync.stream({match: '**/*.css'}));
 }
 
 function watchFiles() {
+  console.log('watching');
   gulp.watch(['./app/*.html'], ['copy:files', browserSync.reload]);
-  gulp.watch(['./app/styles/*.scss'], ['sass:dev', browserSync.reload]);
+  gulp.watch('./app/styles/**/*.css', ['styles']);
   gulp.watch(['./app/scripts/**/*.js'], ['copy:files', browserSync.reload]);
 }
 
 gulp.task('clean', clean);
 gulp.task('browser-sync', _browserSync);
-gulp.task('sass:dev', sassDev);
+gulp.task('styles', styles);
 gulp.task('copy:files', copyFiles);
 gulp.task('watch:files', watchFiles);
 
@@ -61,7 +100,7 @@ gulp.task('default', function(cb) {
   runSequence(
     'clean',
     'copy:files',
-    'sass:dev',
+    'styles',
     cb
   );
 });
