@@ -46,10 +46,11 @@
       "node": true
     },
     "rules": {
-      "require-jsdoc": 1,
+      "require-jsdoc": 0,
       "key-spacing": 0
     },
     "globals": {
+      "$log": true
     }
   }
 }
