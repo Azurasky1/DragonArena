@@ -11,6 +11,7 @@
 */
 (function(global) {
   'use strict';
+  var modules = global.$modules || {};
 
-  // global.$OVERLAYS = Overlays.init();
+  modules.Overlays.init();
 })(typeof window === 'undefined' ? global : window);

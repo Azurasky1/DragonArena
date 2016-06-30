@@ -1,2 +1,5 @@
 @import 'global/reset';
+@import 'overlays/overlays';
+@import 'board/board';
 @import 'overlays/server-info';
+@import 'overlays/welcome-screen';

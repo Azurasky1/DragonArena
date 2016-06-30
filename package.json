@@ -47,10 +47,13 @@
     },
     "rules": {
       "require-jsdoc": 0,
-      "key-spacing": 0
+      "key-spacing": 0,
+      "no-implicit-coercion": [2, { "allow": ["!!", "~"] } ],
+      "no-extra-boolean-cast": 0,
+      "no-negated-condition": 0
     },
     "globals": {
-      "$log": true
+      "_log": true
     }
   }
 }

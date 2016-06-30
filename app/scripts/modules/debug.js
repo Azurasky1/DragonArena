@@ -10,6 +10,8 @@
  *              and ready to be used in a development mode only
 */
 (function(global) {
+  'use strict';
+
   /**
    * Log a debug message prefixed by a reference time in UTC format
    *
@@ -33,5 +35,5 @@
     console.info('[' + time + ']', message);
   }
 
-  window.$log = _log;
+  window._log = _log;
 })(typeof window === 'undefined' ? global : window);
