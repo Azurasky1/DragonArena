@@ -5,56 +5,51 @@
  *
  * MIT license: https://opensource.org/licenses/mit-license.php
 */
-(function(global, document) {
+(function() {
   'use strict';
 
   var app;
-  var game = {
-    player: {}
-  };
 
   // app core function
   function App() {
-    this.elements = {};
-    this.modules = global.$modules || {};
-    this.game = game;
-    this.elements.overlays = document.querySelector('.overlays');
-    this.elements.welcome = document.querySelector('.overlays__welcome');
-    this.elements.startGame = document
-      .querySelector('.overlays__welcome .start__game');
+    var self = this;
 
-    this.elements.startGameError = document
-      .querySelector('.overlays__welcome .input__element__message--error');
+    self.modules = window.$modules || {};
+    self.game = {
+      player: {}
+    };
 
-    this.elements.store = document.querySelector('.overlays__store');
+    self.el = {
+      overlays: document.querySelector('.overlays')
+    };
 
-    this.elements.startGame.addEventListener('click', this.startGame);
+    self.el.overlays
+        .addEventListener('start', self.startGame, false);
+    document.addEventListener('player_ready', self.playerReady, false);
 
     _log('App ready!');
   }
 
-  App.prototype.startGame = function() {
-    app.game.player.name = app.modules.Overlays.registerPlayer();
+  App.prototype.startGame = function(e) {
+    _log('starting game...');
 
-    if (!app.game.player.name) {
-      app.elements.startGameError.classList.add('active');
-    } else {
-      app.modules.Overlays.startGame();
-    }
+    app.modules.Player.init(app.game, e.detail.playerName);
+  };
+
+  App.prototype.playerReady = function(e) {
+    _log('Preparing the board...');
   };
 
   function ready() {
     // Create an instance of the app
     app = new App();
 
-    // Start the welcome screen once the app is loaded
-    app.modules.Overlays.init(
-      app.elements.overlays,
-      app.elements.welcome
-    );
+    // Initialize modules
+    app.modules.Overlays.init(app.el.overlays, app.game);
 
-    app.modules.Overlays.show();
+    // Start the welcome screen once the app is loaded
+    app.modules.Overlays.startWelcome();
   }
 
   window.addEventListener('load', ready, false);
-})(typeof window === 'undefined' ? global : window, document);
+})();

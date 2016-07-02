@@ -9,54 +9,96 @@
  * Description: Overlays elements like the welcome screen and the store
  *              are served by this module
 */
-(function(global, document, _log) {
+(function(modules) {
   'use strict';
-
-  var modules = global.$modules || {};
-  modules.Overlays = {};
-
-  var module = modules.Overlays;
-  var playerName = document.querySelector('.overlays__welcome .playername');
-  var overlay;
 
   // Private scope
 
-  function Overlays(overlays, welcome) {
-    this.overlays = overlays;
-    this.welcome = welcome;
-  }
+  var _game;
 
   // Public scope
 
-  function show() {
+  function Overlays() {
+    this.el = {};
+  }
+
+  Overlays.prototype.startGame = function() {
+    var self = this;
+    var event = new CustomEvent('start', {
+      detail: {
+        playerName: self.el.playerName.value
+      }
+    });
+
+    self.element.classList.remove('visible');
+    self.el.welcome.classList.remove('visible');
+
+    self.element.dispatchEvent(event);
+  };
+
+  Overlays.prototype.validateGame = function(e) {
+    this.onInputChange();
+
+    // validate the field also if the Return key is pressed
+    if (e && e.keyCode && e.keyCode !== 13) {
+      return;
+    }
+
+    if (!!_game.player.name) {
+      this.startGame();
+    }
+  };
+
+  Overlays.prototype.startWelcome = function() {
+    var self = this;
+
     setTimeout(function() {
-      overlay.overlays.classList.add('visible');
-      overlay.welcome.classList.add('visible');
-    }, 500);
-  }
+      self.element.classList.add('visible');
+      self.el.welcome.classList.add('visible');
+    }, 750);
+  };
 
-  function startGame() {
-    overlay.overlays.classList.remove('visible');
-    overlay.welcome.classList.remove('visible');
-  }
+  Overlays.prototype.registerPlayer = function() {
+    var name = this.el.playerName.value;
 
-  function registerPlayer() {
-    var name;
-    name = playerName.value;
+    return name ? name : null;
+  };
 
-    return name ? name : false;
-  }
+  Overlays.prototype.onInputChange = function() {
+    _game.player.name = this.registerPlayer();
 
-  function init(overlays, welcome) {
-    overlay = new Overlays(overlays, welcome);
-  }
+    if (!_game.player.name) {
+      this.el.startGameError.classList.add('active');
+    } else {
+      this.el.startGameError.classList.remove('active');
+    }
+  };
 
-  module.init = init;
-  module.show = show;
-  module.registerPlayer = registerPlayer;
-  module.startGame = startGame;
+  Overlays.prototype.init = function(element, game) {
+    var self = this;
 
-  global.$modules = modules;
+    self.element = element;
+    _game = game;
 
-  _log('Overlays ready');
-})(typeof window === 'undefined' ? global : window, document, _log);
+    // define elements in the DOM
+    self.el.welcome = self.element.querySelector('.overlays__welcome');
+    self.el.store = self.element.querySelector('.overlays__store');
+    self.el.playerName = self.element.querySelector('.playername');
+    self.el.startGame = self.element.querySelector('.start__game');
+    self.el.startGameError = self.element
+        .querySelector('.input__element__message--error');
+
+    // event listeners
+    self.el.playerName
+        .addEventListener('keyup', self.onInputChange.bind(self), false);
+    self.element
+        .addEventListener('keypress', self.validateGame.bind(self), false);
+    self.el.startGame
+        .addEventListener('click', self.validateGame.bind(self), false);
+
+    _log('Overlays ready');
+  };
+
+  modules.Overlays = new Overlays();
+  window.$modules = modules;
+})(window.$modules || {});

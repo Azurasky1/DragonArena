@@ -3,7 +3,9 @@
   padding: 10px 15px;
   width: 80%;
   height: 50%;
-  min-height: 200px;
+  max-width: 600px;
+  min-height: 300px;
+  max-height: 350px;
 
   border-radius: 2px;
 
@@ -22,8 +24,13 @@
   opacity: 1;
 }
 
+.overlays__welcome .input__element {
+  display: flex
+}
+
 .overlays__welcome .overlays__welcome__title {
   text-align: center;
+  margin-bottom: 40px;
 }
 
 .overlays__welcome .input__element__text {
@@ -50,6 +57,10 @@
 
 .overlays__welcome .input__element__message--error {
   color: #c73838;
+}
+
+.overlays__welcome .input__element--button {
+  align-items: flex-end;
 }
 
 .overlays__welcome .input__element__button {
