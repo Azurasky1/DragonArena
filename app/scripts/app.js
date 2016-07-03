@@ -15,34 +15,43 @@
     var self = this;
 
     self.modules = window.$modules || {};
-    self.game = {
-      player: {}
-    };
+    self.game = {};
 
     self.el = {
-      overlays: document.querySelector('.overlays')
+      overlays: document.querySelector('.overlays'),
+      canvas: document.querySelector('.canvas')
     };
 
     self.el.overlays
         .addEventListener('start', self.startGame, false);
     document.addEventListener('player_ready', self.playerReady, false);
+    document.addEventListener('board_ready', self.boardReady, false);
 
     _log('App ready!');
   }
 
-  App.prototype.startGame = function(e) {
-    _log('starting game...');
+  App.prototype.startGame = function() {
+    _log('Preparing the player...');
 
-    app.modules.Player.init(app.game, e.detail.playerName);
+    app.modules.Player.init(app.game, '/images/players/001.png');
   };
 
-  App.prototype.playerReady = function(e) {
+  App.prototype.playerReady = function() {
     _log('Preparing the board...');
+
+    app.modules.Board.init(app.game, app.el.canvas);
+  };
+
+  App.prototype.boardReady = function() {
+    _log('Board ready. Starting the game loop');
   };
 
   function ready() {
     // Create an instance of the app
     app = new App();
+
+    // Make sure the game Object is empty before starting a new game
+    app.game = {};
 
     // Initialize modules
     app.modules.Overlays.init(app.el.overlays, app.game);

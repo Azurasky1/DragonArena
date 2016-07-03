@@ -1,7 +1,10 @@
-#canvas {
+.canvas {
   display: block;
-  width: 100%;
-  height: 100%;
+  margin: 0 auto;
 
-  background-color: #FFF;
+}
+
+.canvas.canvas--big {
+  margin-top: 5px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, .5);
 }

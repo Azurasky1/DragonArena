@@ -23,17 +23,12 @@
   }
 
   Overlays.prototype.startGame = function() {
-    var self = this;
-    var event = new CustomEvent('start', {
-      detail: {
-        playerName: self.el.playerName.value
-      }
-    });
+    var event = new Event('start');
 
-    self.element.classList.remove('visible');
-    self.el.welcome.classList.remove('visible');
+    this.element.classList.remove('visible');
+    this.el.welcome.classList.remove('visible');
 
-    self.element.dispatchEvent(event);
+    this.element.dispatchEvent(event);
   };
 
   Overlays.prototype.validateGame = function(e) {
@@ -79,6 +74,8 @@
 
     self.element = element;
     _game = game;
+
+    _game.player = {};
 
     // define elements in the DOM
     self.el.welcome = self.element.querySelector('.overlays__welcome');

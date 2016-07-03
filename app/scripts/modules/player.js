@@ -15,20 +15,18 @@
   // Private scope
 
   var _game;
+  var event = new Event('player_ready');
 
   // Public scope
 
   function Player() {}
 
-  Player.prototype.init = function(game, playerName) {
+  Player.prototype.init = function(game, avatar) {
     _game = game;
-    _game.player.name = playerName;
     _game.player.avatar = new Image();
-    _game.player.avatar.src = '/images/players/001.png';
+    _game.player.avatar.src = avatar;
 
     _game.player.avatar.onload = function() {
-      var event = new Event('player_ready');
-
       _log('Player ready');
       document.dispatchEvent(event);
     };
