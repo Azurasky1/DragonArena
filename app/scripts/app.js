@@ -9,6 +9,30 @@
   'use strict';
 
   var app;
+  var fpsInterval;
+  var now;
+  var then;
+  var elapsed;
+  var fps = 10;
+
+  function updateEverythingThenDraw() {
+    app.modules.Board.drawGrid();
+    app.modules.Player.draw();
+    app.modules.Player.nextFrame();
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    now = Date.now();
+    elapsed = now - then;
+
+    if (elapsed > fpsInterval) {
+      then = now - (elapsed % fpsInterval);
+
+      updateEverythingThenDraw();
+    }
+  }
 
   // app core function
   function App() {
@@ -24,26 +48,38 @@
 
     self.el.overlays
         .addEventListener('start', self.startGame, false);
-    document.addEventListener('player_ready', self.playerReady, false);
-    document.addEventListener('board_ready', self.boardReady, false);
+    document
+      .addEventListener('player_ready', self.playerReady, false);
+    document
+      .addEventListener('board_ready', self.setGameLoop.bind(this), false);
 
     _log('App ready!');
   }
 
+  App.prototype.setGameLoop = function() {
+    _log('Board ready. Starting the game loop');
+
+    fpsInterval = 1000 / fps;
+    then = Date.now();
+
+    animate();
+  };
+
   App.prototype.startGame = function() {
     _log('Preparing the player...');
 
-    app.modules.Player.init(app.game, '/images/players/001.png');
+    app.modules.Player.init(app.game,
+                            '/images/players/player_001.png', {
+                              frames: 4,
+                              width: 128,
+                              height: 208
+                            });
   };
 
   App.prototype.playerReady = function() {
     _log('Preparing the board...');
 
     app.modules.Board.init(app.game, app.el.canvas);
-  };
-
-  App.prototype.boardReady = function() {
-    _log('Board ready. Starting the game loop');
   };
 
   function ready() {

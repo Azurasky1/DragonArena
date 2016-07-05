@@ -22,6 +22,11 @@
   var screenWidth;
   var boardHeight;
   var boardWidth;
+  var cellSize = 31;
+  var lineWidth = 0.5;
+  var gridColor = '#AAA';
+  var background = '#EEE';
+  var padding = 10;
 
   // Public scope
 
@@ -31,16 +36,9 @@
    * Draw the board on the screen
    */
   Board.prototype.drawGrid = function() {
-    var cellSize = 38;
-    var lineWidth = 0.5;
-    var gridColor = '#333';
-    var padding = 10;
-    var background = '#EEE';
     var x;
 
     cellSize *= _game.scaleFactor;
-
-    _log('cellSize: ' + cellSize);
 
     _cv.clearRect(0, 0, boardWidth, boardHeight);
     _cv.fillStyle = background;
@@ -60,9 +58,6 @@
 
     _cv.strokeStyle = gridColor;
     _cv.stroke();
-
-    // DIspatch an event to the app as the board is ready
-    document.dispatchEvent(event);
   };
 
   /**
@@ -118,18 +113,22 @@
     _canvas.height = boardHeight;
 
     this.drawGrid();
+
+    // DIspatch an event to the app as the board is ready
+    document.dispatchEvent(event);
   };
 
   /**
    * Initialize the board
    *
-   * @param  {Object} game    The game abject from the App
+   * @param  {Object} game    The game object from the App
    * @param  {Object} canvas  The canvas DOM element
    */
   Board.prototype.init = function(game, canvas) {
     _game = game;
     _canvas = canvas;
     _cv = canvas.getContext('2d');
+    _game.cv = _cv;
 
     this.updateBoard();
   };
