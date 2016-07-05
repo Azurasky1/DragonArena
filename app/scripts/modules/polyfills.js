@@ -1,6 +1,13 @@
-/**
- * wrapper for all the polyfills required for the app to properly being
- * supported by all the digfferent browsers.
+ /**
+  * DragonArena
+  * Copyright (c) 2016 by Bill B. and andreasonny83. All Rights Reserved.
+  * This code may only be used under the MIT style license.
+  *
+  * MIT license: https://opensource.org/licenses/mit-license.php
+  *
+  * Module name: Polyfills
+  * Description: A wrapper for all the polyfills required for the app to
+  *              properly being supported by all the digfferent browsers.
  */
 (function() {
   /**

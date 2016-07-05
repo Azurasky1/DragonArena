@@ -13,7 +13,7 @@
   var now;
   var then;
   var elapsed;
-  var fps = 10;
+  var fps = 9;
 
   function updateEverythingThenDraw() {
     app.modules.Board.drawGrid();
@@ -49,15 +49,17 @@
     self.el.overlays
         .addEventListener('start', self.startGame, false);
     document
-      .addEventListener('player_ready', self.playerReady, false);
+      .addEventListener('board_ready', self.boardReady, false);
     document
-      .addEventListener('board_ready', self.setGameLoop.bind(this), false);
+      .addEventListener('player_ready', self.setGameLoop.bind(this), false);
 
     _log('App ready!');
   }
 
   App.prototype.setGameLoop = function() {
     _log('Board ready. Starting the game loop');
+
+    app.modules.Keyboard.init(app.game);
 
     fpsInterval = 1000 / fps;
     then = Date.now();
@@ -66,20 +68,20 @@
   };
 
   App.prototype.startGame = function() {
-    _log('Preparing the player...');
-
-    app.modules.Player.init(app.game,
-                            '/images/players/player_001.png', {
-                              frames: 4,
-                              width: 128,
-                              height: 208
-                            });
-  };
-
-  App.prototype.playerReady = function() {
     _log('Preparing the board...');
 
     app.modules.Board.init(app.game, app.el.canvas);
+  };
+
+  App.prototype.boardReady = function() {
+    _log('Preparing the player...');
+
+    app.modules.Player.init(app.game,
+      '/images/players/player_001.png', {
+        frames: 4,
+        width: 128,
+        height: 208
+      });
   };
 
   function ready() {

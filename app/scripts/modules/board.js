@@ -5,9 +5,9 @@
  *
  * MIT license: https://opensource.org/licenses/mit-license.php
  *
- * Module name: Overlays
- * Description: Overlays elements like the welcome screen and the store
- *              are served by this module
+ * Module name: Board
+ * Description: Prepare the game setting the global scaleFactor according to
+ *              the user's display size and draw the board on the screen
 */
 (function(modules) {
   'use strict';
@@ -37,8 +37,9 @@
    */
   Board.prototype.drawGrid = function() {
     var x;
+    var cell;
 
-    cellSize *= _game.scaleFactor;
+    cell = cellSize * _game.scaleFactor;
 
     _cv.clearRect(0, 0, boardWidth, boardHeight);
     _cv.fillStyle = background;
@@ -46,12 +47,12 @@
 
     _cv.beginPath();
 
-    for (x = lineWidth; x <= screenWidth; x += cellSize) {
+    for (x = lineWidth; x <= screenWidth; x += cell) {
       _cv.moveTo(x - padding, lineWidth);
       _cv.lineTo(x - padding, boardHeight);
     }
 
-    for (x = lineWidth; x <= boardHeight; x += cellSize) {
+    for (x = lineWidth; x <= boardHeight; x += cell) {
       _cv.moveTo(lineWidth, x - padding);
       _cv.lineTo(screenWidth, x - padding);
     }
@@ -111,6 +112,11 @@
     // set the canvas size
     _canvas.width = boardWidth;
     _canvas.height = boardHeight;
+
+    _game.board = {
+      width: boardWidth,
+      height: boardHeight
+    };
 
     this.drawGrid();
 

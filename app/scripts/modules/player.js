@@ -5,9 +5,8 @@
  *
  * MIT license: https://opensource.org/licenses/mit-license.php
  *
- * Module name: Overlays
- * Description: Overlays elements like the welcome screen and the store
- *              are served by this module
+ * Module name: Player
+ * Description: Create and draw the players on the board
 */
 (function(modules) {
   'use strict';
@@ -25,7 +24,7 @@
     _game.cv.drawImage(
       _game.player.avatar,
       _game.player.frame.width * _game.player.frame.current,
-      _game.player.animation.y,
+      _game.player.frame.direction * _game.player.frame.height,
       _game.player.frame.width, _game.player.frame.height,
        // centered on canvass
       _game.player.pos.x, _game.player.pos.y,
@@ -58,9 +57,10 @@
     _game.player.avatar = new Image();
     _game.player.avatar.src = avatar;
 
+    // place the player in a random place
     _game.player.pos = {
-      x: 0,
-      y: 0
+      x: Math.floor((Math.random() * 600) + 100) * _game.scaleFactor,
+      y: Math.floor((Math.random() * 400) + 100) * _game.scaleFactor
     };
 
     _game.player.animation = {
@@ -70,10 +70,12 @@
 
     _game.player.frame = {
       current: 0,
+      direction: Math.floor((Math.random() * 3)),
       total: playerInfo.frames,
       width: (playerInfo.width / playerInfo.frames),
       height: (playerInfo.height / playerInfo.frames)
     };
+    _log(_game.player.frame.direction);
 
     _game.player.avatar.onload = function() {
       _log('Player ready');
