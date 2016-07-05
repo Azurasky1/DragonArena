@@ -76,11 +76,38 @@
   App.prototype.boardReady = function() {
     _log('Preparing the player...');
 
+    var player = Math.floor((Math.random() * 8));
+    var playersInfo = [{
+      width: 128,
+      height: 208
+    }, {
+      width: 128,
+      height: 192
+    }, {
+      width: 128,
+      height: 192
+    }, {
+      width: 128,
+      height: 192
+    }, {
+      width: 192,
+      height: 192
+    }, {
+      width: 128,
+      height: 192
+    }, {
+      width: 128,
+      height: 192
+    }, {
+      width: 128,
+      height: 192
+    }];
+
     app.modules.Player.init(app.game,
-      '/images/players/player_001.png', {
+      '/images/players/player_00' + player + '.png', {
         frames: 4,
-        width: 128,
-        height: 208
+        width: playersInfo[player - 1].width,
+        height: playersInfo[player - 1].height
       });
   };
 
