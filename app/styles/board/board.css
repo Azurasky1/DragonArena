@@ -1,0 +1,10 @@
+.canvas {
+  display: block;
+  margin: 0 auto;
+
+}
+
+.canvas.canvas--big {
+  margin-top: 5px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, .5);
+}
