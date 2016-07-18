@@ -28,28 +28,39 @@
   }
 
   Keyboard.prototype.keyUp = function(e) {
+    _key = null;
+    _game.player.tick = _game.player.ticks;
+    _game.player.animate = 'still';
   };
 
   Keyboard.prototype.keyDwn = function(e) {
     _key = e.keyCode || e.which;
+  };
 
+  Keyboard.prototype.listenKeyboard = function() {
     switch (_key) {
       case this.KEY_DOWN:
         _game.player.frame.direction = 0;
+        _game.player.animate = 'walk';
+        _game.player.pos.y += 3;
         break;
       case this.KEY_LEFT:
         _game.player.frame.direction = 1;
+        _game.player.animate = 'walk';
+        _game.player.pos.x -= 3;
         break;
       case this.KEY_RIGHT:
         _game.player.frame.direction = 2;
+        _game.player.animate = 'walk';
+        _game.player.pos.x += 3;
         break;
       case this.KEY_UP:
         _game.player.frame.direction = 3;
-        break;
-      case this.KEY_ENTER:
-        e.preventDefault();
+        _game.player.animate = 'walk';
+        _game.player.pos.y -= 3;
         break;
       default:
+        break;
     }
   };
 
@@ -63,7 +74,6 @@
     _game = game;
 
     window.addEventListener('keydown', self.keyDwn.bind(self), false);
-
     window.addEventListener('keyup', self.keyUp.bind(self), false);
   };
 

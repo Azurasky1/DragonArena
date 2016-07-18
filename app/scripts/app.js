@@ -13,12 +13,12 @@
   var now;
   var then;
   var elapsed;
-  var fps = 9;
+  var fps = 25;
 
   function updateEverythingThenDraw() {
     app.modules.Board.drawGrid();
     app.modules.Player.draw();
-    app.modules.Player.nextFrame();
+    app.modules.Keyboard.listenKeyboard();
   }
 
   function animate() {
@@ -47,7 +47,7 @@
     };
 
     self.el.overlays
-        .addEventListener('start', self.startGame, false);
+      .addEventListener('start', self.startGame, false);
     document
       .addEventListener('board_ready', self.boardReady, false);
     document

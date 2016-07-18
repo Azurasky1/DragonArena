@@ -32,9 +32,20 @@
       _game.player.frame.width * _game.scaleFactor,
       _game.player.frame.height * _game.scaleFactor
     );
+
+    if (_game.player.animate === 'walk') {
+      this.nextFrame();
+    }
   };
 
   Player.prototype.nextFrame = function() {
+    if (_game.player.tick > 0) {
+      _game.player.tick -= 1;
+      return;
+    }
+
+    _game.player.tick = _game.player.ticks;
+
     if (_game.player.frame.current < _game.player.frame.total - 1) {
       _game.player.frame.current += 1;
     } else {
@@ -56,6 +67,8 @@
     _game = game;
     _game.player.avatar = new Image();
     _game.player.avatar.src = avatar;
+    _game.player.ticks = 1;
+    _game.player.tick = this.ticks;
 
     // place the player in a random place
     _game.player.pos = {
@@ -75,7 +88,6 @@
       width: (playerInfo.width / playerInfo.frames),
       height: (playerInfo.height / playerInfo.frames)
     };
-    _log(_game.player.frame.direction);
 
     _game.player.avatar.onload = function() {
       _log('Player ready');
