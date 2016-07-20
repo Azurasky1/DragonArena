@@ -61,10 +61,10 @@ see you code changes.
 
 The API will be served inside your App URL + `/api/`.
 When the app is run in Development mode on your local machine, you can reach
-your local APIs from [http://localhost:3009/api/](http://localhost:3009/api/).
+your local APIs from [http://localhost:3009/api/](http://localhost:5001/api/).
 
 You can run a quick sanity check on your server machine just opening a browser
-on: [http://localhost:3009/api/status](http://localhost:3009/api/status).
+on: [http://localhost:3009/api/status](http://localhost:5001/api/status).
 
 You should be able to see a JSON formatted output displaying a `Status: 200`
 and some other server information.
