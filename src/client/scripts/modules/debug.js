@@ -32,7 +32,7 @@
       now.getUTCSeconds()
     ].join(':');
 
-    console.info('[' + time + ']', message);
+    console.info('[' + time + ']', String(message));
   }
 
   window._log = _log;

@@ -76,7 +76,9 @@
   App.prototype.boardReady = function() {
     _log('Preparing the player...');
 
-    var player = Math.floor((Math.random() * 8));
+    var player = Math.floor(Math.random() * 8 + 1);
+    _log('using player avatar #' + player);
+
     var playersInfo = [{
       width: 128,
       height: 208

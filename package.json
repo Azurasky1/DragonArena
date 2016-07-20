@@ -5,7 +5,7 @@
   "main": "app/index.html",
   "private": true,
   "scripts": {
-    "start": "node server/index.js",
+    "start": "gulp serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -30,10 +30,12 @@
     "eslint-plugin-import": "^1.8.1",
     "express": "^4.13.4",
     "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.1.0",
     "gulp-postcss": "^6.1.1",
     "gulp-sass": "^2.3.1",
     "gulp-sourcemaps": "^1.6.0",
     "http": "0.0.0",
+    "nodemon": "^1.9.2",
     "pkginfo": "^0.4.0",
     "postcss-import": "^8.1.2",
     "run-sequence": "^1.2.1",
@@ -48,12 +50,27 @@
     "rules": {
       "require-jsdoc": 0,
       "key-spacing": 0,
-      "no-implicit-coercion": [2, { "allow": ["!!", "~"] } ],
+      "no-implicit-coercion": [
+        2,
+        {
+          "allow": [
+            "!!",
+            "~"
+          ]
+        }
+      ],
       "no-extra-boolean-cast": 0,
       "no-negated-condition": 0
     },
     "globals": {
       "_log": true
     }
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "morgan": "^1.7.0",
+    "path": "^0.12.7",
+    "serve-favicon": "^2.3.0"
   }
 }

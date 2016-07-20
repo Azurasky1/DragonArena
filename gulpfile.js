@@ -11,6 +11,7 @@ var postcss = require('gulp-postcss');
 var sourcemaps = require('gulp-sourcemaps');
 const runSequence = require('run-sequence');
 const browserSync = require('browser-sync').create();
+const nodemon = require('gulp-nodemon');
 
 /**
  * autoprefixer settings
@@ -47,25 +48,23 @@ function clean() {
 }
 
 function _browserSync() {
-  browserSync.init({
-    server: {
-      baseDir: './.tmp'
-    },
+  browserSync.init(null, {
+    proxy: 'http://localhost:8009',
     port: 5001
   });
 }
 
 function copyFiles() {
   gulp.src([
-    './app/*.html',
-    './app/scripts/**/*.js',
-    './app/images/**/*'
-  ], {base: './app'})
+    './src/client/*.html',
+    './src/client/scripts/**/*.js',
+    './src/client/images/**/*'
+  ], {base: './src/client'})
   .pipe(gulp.dest('.tmp'));
 }
 
 function styles() {
-  return gulp.src('./app/styles/*.css')
+  return gulp.src('./src/client/styles/*.css')
     .pipe(sourcemaps.init())
     .pipe(postcss(processors))
     .on('error', console.log)
@@ -76,13 +75,22 @@ function styles() {
 
 function watchFiles() {
   console.log('watching');
-  gulp.watch(['./app/*.html'], ['copy:files', browserSync.reload]);
-  gulp.watch('./app/styles/**/*.css', ['styles']);
-  gulp.watch(['./app/scripts/**/*.js'], ['copy:files', browserSync.reload]);
+  gulp.watch(['./src/client/*.html'], ['copy:files', browserSync.reload]);
+  gulp.watch('./src/client/styles/**/*.css', ['styles']);
+  gulp.watch(['./src/client/scripts/**/*.js'], ['copy:files', browserSync.reload]);
 }
 
+gulp.task('nodemon', function() {
+  nodemon({
+    script: 'src/server/app.js',
+    ext: 'js html css',
+    ignore: [],
+    env: {NODE_ENV: 'development'}
+  });
+});
+
 gulp.task('clean', clean);
-gulp.task('browser-sync', _browserSync);
+gulp.task('browser-sync', ['nodemon'], _browserSync);
 gulp.task('styles', styles);
 gulp.task('copy:files', copyFiles);
 gulp.task('watch:files', watchFiles);

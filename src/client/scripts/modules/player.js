@@ -67,7 +67,7 @@
     _game = game;
     _game.player.avatar = new Image();
     _game.player.avatar.src = avatar;
-    _game.player.ticks = 1;
+    _game.player.ticks = 2;
     _game.player.tick = this.ticks;
 
     // place the player in a random place

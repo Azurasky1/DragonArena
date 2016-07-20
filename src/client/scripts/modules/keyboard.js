@@ -29,7 +29,7 @@
 
   Keyboard.prototype.keyUp = function(e) {
     _key = null;
-    _game.player.tick = _game.player.ticks;
+    // _game.player.tick = _game.player.ticks;
     _game.player.animate = 'still';
   };
 
