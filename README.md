@@ -45,14 +45,8 @@ npm start
 This will start the server NodeJS application responsible for serving both the
 client app and the server API.
 
-Leave the npm task running in your terminal, then your clien application should
+Leave the `npm` task running in your terminal, then your client application should
 be automatically rendered inside a browser.
-
-You can run a quick sanity check on your server machine just opening a browser
-on: `http://localhost:3009/api/status`. If you're able to see a JSON formatted
-output displaying a `Status: 200` and some other server information,
-your server is up and running and your client app should be able to establish
-a communication with it.
 
 ## Development
 
@@ -63,6 +57,30 @@ Every time a file is changed, the browser will be automatically
 refreshed and all the information will be updated in order to immediately
 see you code changes.
 
+## DragonArena API
+
+The API will be served inside your App URL + `/api/`.
+When the app is run in Development mode on your local machine, you can reach
+your local APIs from [http://localhost:3009/api/](http://localhost:3009/api/).
+
+You can run a quick sanity check on your server machine just opening a browser
+on: [http://localhost:3009/api/status](http://localhost:3009/api/status).
+
+You should be able to see a JSON formatted output displaying a `Status: 200`
+and some other server information.
+
+A random HASH key is also generated inside the `message` key.
+You can verify your server is really running by refreshing
+this page and make sure the random generated number is different from
+the previous one.
+
+If, for some reason, the number never changes, try to manually stop and restart
+the `npm start` task on your terminal.
+
 ## Building a new release App
 
 This is currently work in progress.
+
+## License
+
+MIT © [Bill B. and Andrea Sonny](https://github.com/Azurasky1/DragonArena/blob/master/LICENSE)
