@@ -28,6 +28,10 @@
   }
 
   Keyboard.prototype.keyUp = function(e) {
+    if (e.keyCode !== _key) {
+      return;
+    }
+
     _key = null;
     // _game.player.tick = _game.player.ticks;
     _game.player.animate = 'still';

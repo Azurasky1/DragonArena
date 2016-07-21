@@ -84,7 +84,7 @@ gulp.task('nodemon', function() {
   nodemon({
     script: 'src/server/app.js',
     ext: 'js html css',
-    ignore: [],
+    ignore: ['src/client/**/*.*'],
     env: {NODE_ENV: 'development'}
   });
 });

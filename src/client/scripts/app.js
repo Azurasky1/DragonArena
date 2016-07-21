@@ -118,7 +118,9 @@
     app = new App();
 
     // Make sure the game Object is empty before starting a new game
-    app.game = {};
+    app.game = {
+      fps: fps
+    };
 
     // Initialize modules
     app.modules.Overlays.init(app.el.overlays, app.game);
