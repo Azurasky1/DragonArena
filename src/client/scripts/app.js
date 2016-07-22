@@ -75,6 +75,7 @@
   App.prototype.startGame = function() {
     _log('Preparing the board...');
 
+    app.el.canvas.classList.remove('hide');
     app.modules.Board.init(app.game, app.el.canvas);
   };
 
@@ -119,6 +120,8 @@
   };
 
   function ready() {
+    window.removeEventListener('load', ready, false);
+
     // Create an instance of the app
     app = new App();
 

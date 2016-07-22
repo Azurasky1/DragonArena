@@ -18,6 +18,8 @@
   // Private scope
 
   var _game;
+  var keyPressListener;
+  var keyUpListener;
 
   // Public scope
 
@@ -43,6 +45,10 @@
     }
 
     if (!!_game.player.name) {
+      this.el.playerName.removeEventListener('keyup', keyUpListener, false);
+      this.element.removeEventListener('keypress', keyPressListener, false);
+      this.el.startGame.removeEventListener('click', keyPressListener, false);
+
       this.startGame();
     }
   };
@@ -88,13 +94,13 @@
     self.el.startGameError = self.element
         .querySelector('.input__element__message--error');
 
+    keyPressListener = self.validateGame.bind(self);
+    keyUpListener = self.onInputChange.bind(self);
+
     // event listeners
-    self.el.playerName
-        .addEventListener('keyup', self.onInputChange.bind(self), false);
-    self.element
-        .addEventListener('keypress', self.validateGame.bind(self), false);
-    self.el.startGame
-        .addEventListener('click', self.validateGame.bind(self), false);
+    self.el.playerName.addEventListener('keyup', keyUpListener, false);
+    self.element.addEventListener('keypress', keyPressListener, false);
+    self.el.startGame.addEventListener('click', keyPressListener, false);
 
     _log('Overlays ready');
   };
