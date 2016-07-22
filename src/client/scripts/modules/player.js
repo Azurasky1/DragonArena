@@ -1,13 +1,16 @@
 /**
  * DragonArena
- * Copyright (c) 2016 by Bill B. and andreasonny83. All Rights Reserved.
- * This code may only be used under the MIT style license.
  *
- * MIT license: https://opensource.org/licenses/mit-license.php
+ * @license
+ * Copyright (c) 2016 by Bill B. and andreasonny83. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at
+ * https://raw.githubusercontent.com/Azurasky1/DragonArena/develop/LICENSE
  *
  * Module name: Player
  * Description: Create and draw the players on the board
-*/
+ */
 (function(modules) {
   'use strict';
 
@@ -45,7 +48,7 @@
     _game.cv.fillStyle = '#666';
     _game.cv.fillRect(_game.player.pos.x - (9 * _game.scaleFactor) - 1,
                       _game.player.pos.y - (13 * _game.scaleFactor) - 1,
-                      (_game.player.frame.width * _game.scaleFactor * 1.6) + 2,
+                      (50 * _game.scaleFactor) + 2,
                       (6 * _game.scaleFactor) + 2);
 
     _game.cv.fillStyle = _game.player.color;

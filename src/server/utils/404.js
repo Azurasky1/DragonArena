@@ -1,3 +1,13 @@
+/**
+ * DragonArena
+ *
+ * @license
+ * Copyright (c) 2016 by Bill B. and andreasonny83. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at
+ * https://raw.githubusercontent.com/Azurasky1/DragonArena/develop/LICENSE
+ */
 module.exports = function() {
   var service = {
     notFoundMiddleware: notFoundMiddleware,

@@ -1,20 +1,23 @@
 /**
  * DragonArena
- * Copyright (c) 2016 by Bill B. and andreasonny83. All Rights Reserved.
- * This code may only be used under the MIT style license.
  *
- * MIT license: https://opensource.org/licenses/mit-license.php
+ * @license
+ * Copyright (c) 2016 by Bill B. and andreasonny83. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at
+ * https://raw.githubusercontent.com/Azurasky1/DragonArena/develop/LICENSE
  *
  * Module name: collisionDetection
  * Description:
-*/
+ */
 (function(modules) {
   'use strict';
 
   var module = {};
 
   module.collisionDetection = function(body1, body2) {
-    return ( (body1 === body2) ||
+    return ((body1 === body2) ||
     (body1.pos.x + body1.frame.width < body2.pos.x) ||
     (body1.pos.x > body2.pos.x + body2.width) ||
     (body1.pos.y > body2.pos.y + body2.height) ||

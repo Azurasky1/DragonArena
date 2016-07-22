@@ -1,14 +1,18 @@
 /**
  * DragonArena
- * Copyright (c) 2016 by Bill B. and andreasonny83. All Rights Reserved.
- * This code may only be used under the MIT style license.
  *
- * MIT license: https://opensource.org/licenses/mit-license.php
+ * @license
+ * Copyright (c) 2016 by Bill B. and andreasonny83. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at
+ * https://raw.githubusercontent.com/Azurasky1/DragonArena/develop/LICENSE
  *
  * Module name: Board
  * Description: Prepare the game setting the global scaleFactor according to
  *              the user's display size and draw the board on the screen
-*/
+ *
+ */
 (function(modules) {
   'use strict';
 

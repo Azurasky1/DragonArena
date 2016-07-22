@@ -1,14 +1,17 @@
 /**
  * DragonArena
- * Copyright (c) 2016 by Bill B. and andreasonny83. All Rights Reserved.
- * This code may only be used under the MIT style license.
  *
- * MIT license: https://opensource.org/licenses/mit-license.php
+ * @license
+ * Copyright (c) 2016 by Bill B. and andreasonny83. All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at
+ * https://raw.githubusercontent.com/Azurasky1/DragonArena/develop/LICENSE
  *
  * Module name: Overlays
  * Description: Overlays elements like the welcome screen and the store
  *              are served by this module
-*/
+ */
 (function(modules) {
   'use strict';
 
