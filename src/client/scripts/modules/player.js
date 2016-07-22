@@ -46,17 +46,15 @@
     );
 
     _game.cv.fillStyle = '#666';
-    _game.cv.fillRect(_game.player.pos.x - (9 * _game.scaleFactor) - 1,
-                      _game.player.pos.y - (13 * _game.scaleFactor) - 1,
-                      (50 * _game.scaleFactor) + 2,
-                      (6 * _game.scaleFactor) + 2);
+    _game.cv.fillRect(_game.player.pos.x - 9 * _game.scaleFactor - 1,
+                      _game.player.pos.y - 13 * _game.scaleFactor - 1,
+                      50 * _game.scaleFactor + 2,
+                      6 * _game.scaleFactor + 2);
 
     _game.cv.fillStyle = _game.player.color;
-
     _game.cv.fillRect((_game.player.pos.x) - (9 * _game.scaleFactor),
                       _game.player.pos.y - (13 * _game.scaleFactor),
-                      _game.player.frame.width * (_game.player.health / 100) *
-                        _game.scaleFactor * 1.6,
+                      50 * _game.player.health / 100 * _game.scaleFactor,
                       6 * _game.scaleFactor);
 
     if (_game.player.animate === 'walk') {

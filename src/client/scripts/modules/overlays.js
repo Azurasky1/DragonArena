@@ -94,10 +94,10 @@
     self.el.startGameError = self.element
         .querySelector('.input__element__message--error');
 
+    // event listeners
     keyPressListener = self.validateGame.bind(self);
     keyUpListener = self.onInputChange.bind(self);
 
-    // event listeners
     self.el.playerName.addEventListener('keyup', keyUpListener, false);
     self.element.addEventListener('keypress', keyPressListener, false);
     self.el.startGame.addEventListener('click', keyPressListener, false);
