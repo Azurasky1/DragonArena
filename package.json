@@ -21,6 +21,14 @@
     "url": "https://github.com/Azurasky1/2dgame/issues"
   },
   "homepage": "https://github.com/Azurasky1/2dgame#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "morgan": "^1.7.0",
+    "path": "^0.12.7",
+    "serve-favicon": "^2.3.0",
+    "socket.io": "^1.4.8"
+  },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
     "browser-sync": "^2.13.0",
@@ -63,14 +71,9 @@
       "no-negated-condition": 0
     },
     "globals": {
-      "_log": true
+      "_log": true,
+      "io": true,
+      "$socket": true
     }
-  },
-  "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
-    "morgan": "^1.7.0",
-    "path": "^0.12.7",
-    "serve-favicon": "^2.3.0"
   }
 }

@@ -24,6 +24,7 @@
     app.modules.Board.drawGrid();
     app.modules.Player.draw();
     app.modules.Keyboard.listenKeyboard();
+    app.modules.Projectiles.draw();
   }
 
   function animate() {
@@ -58,6 +59,7 @@
     document
       .addEventListener('player_ready', self.setGameLoop.bind(this), false);
 
+    $socket.emit('app:ready');
     _log('App ready!');
   }
 

@@ -22,46 +22,72 @@
   // Public scope
 
   function Keyboard() {
-    this.KEY_UP = 38;
-    this.KEY_DOWN = 40;
-    this.KEY_LEFT = 37;
-    this.KEY_RIGHT = 39;
-    this.KEY_SPACE = 32;
-    this.KEY_ENTER = 13;
+    this.keys = {
+      KEY_UP: 38,
+      KEY_DOWN: 40,
+      KEY_LEFT: 37,
+      KEY_RIGHT: 39,
+      KEY_SPACE: 32,
+      KEY_ENTER: 13
+    };
+
+    this.shoot = false;
   }
 
   Keyboard.prototype.keyUp = function(e) {
+    if (this.shoot &&
+        e.keyCode === this.keys.KEY_SPACE) {
+      this.shoot = !this.shoot;
+    }
+
     if (e.keyCode !== _key) {
       return;
     }
 
     _key = null;
-    // _game.player.tick = _game.player.ticks;
     _game.player.animate = 'still';
   };
 
   Keyboard.prototype.keyDwn = function(e) {
-    _key = e.keyCode || e.which;
+    var key = e.keyCode || e.which;
+
+    if (key === this.keys.KEY_SPACE) {
+      this.shoot = true;
+    }
+
+    // avoid other keys to stop the player interactions
+    if (key !== this.keys.KEY_UP &&
+        key !== this.keys.KEY_DOWN &&
+        key !== this.keys.KEY_LEFT &&
+        key !== this.keys.KEY_RIGHT) {
+      return;
+    }
+
+    _key = key;
   };
 
   Keyboard.prototype.listenKeyboard = function() {
+    if (this.shoot) {
+      modules.Player.shoot();
+    }
+
     switch (_key) {
-      case this.KEY_DOWN:
+      case this.keys.KEY_DOWN:
         _game.player.frame.direction = 0;
         _game.player.animate = 'walk';
         _game.player.pos.y += 3;
         break;
-      case this.KEY_LEFT:
+      case this.keys.KEY_LEFT:
         _game.player.frame.direction = 1;
         _game.player.animate = 'walk';
         _game.player.pos.x -= 3;
         break;
-      case this.KEY_RIGHT:
+      case this.keys.KEY_RIGHT:
         _game.player.frame.direction = 2;
         _game.player.animate = 'walk';
         _game.player.pos.x += 3;
         break;
-      case this.KEY_UP:
+      case this.keys.KEY_UP:
         _game.player.frame.direction = 3;
         _game.player.animate = 'walk';
         _game.player.pos.y -= 3;

@@ -50,6 +50,16 @@
   </head>
   <body>
 
+    <div class="server__info">
+      <span class="server__info__title">Server status:</span>
+      <span class="server__info__status server__info__status--online">
+        online
+      </span>
+      <span class="server__info__status server__info__status--offline enabled">
+        offline
+      </span>
+    </div>
+
     <div class="overlays">
       <div class="overlays__welcome container">
         <div class="overlays__welcome__title">
@@ -79,27 +89,24 @@
       <div class="overlays__store">
 
       </div>
-
-      <div class="server__info">
-        <span class="server__info__title">Server status:</span>
-        <span class="server__info__status server__info__status--online">
-          online
-        </span>
-        <span class="server__info__status server__info__status--offline enabled">
-          offline
-        </span>
-      </div>
     </div>
 
     <canvas class="canvas hide"></canvas>
 
+    <!-- libraryes -->
     <script src="scripts/modules/polyfills.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- factories -->
     <script src="scripts/modules/debug.js"></script>
     <script src="scripts/modules/utils.js"></script>
+    <script src="scripts/modules/socket.js"></script>
+    <!-- modules -->
     <script src="scripts/modules/overlays.js"></script>
     <script src="scripts/modules/player.js"></script>
     <script src="scripts/modules/board.js"></script>
+    <script src="scripts/modules/projectiles.js"></script>
     <script src="scripts/modules/keyboard.js"></script>
+    <!-- app -->
     <script src="scripts/app.js"></script>
   </body>
 </html>

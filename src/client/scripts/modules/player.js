@@ -18,20 +18,67 @@
 
   var _game;
   var event = new Event('player_ready');
+  var _blinkCount;
+  var _health = {};
 
   // Public scope
 
   function Player() {
     // The time in seconds for a player to naturally loose all his/her health
-    this.degradationTime = 300;
+    // this.degradationTime = 300;
+    this.degradationTime = 120;
   }
+
+  Player.prototype.shoot = function() {
+    modules.Projectiles.new(_game.cv,
+                            _game.player.pos.x,
+                            _game.player.pos.y,
+                            _game.player.frame.width,
+                            _game.player.frame.height,
+                            _game.player.frame.direction);
+
+    _log('Projectiles actives: ' + modules.Projectiles.getActive());
+  };
+
+  Player.prototype.drawHealth = function() {
+    _game.player.health -= (1 / _game.fps) / (this.degradationTime / 100);
+
+    _health = {
+      x: (_game.player.pos.x + _game.player.frame.width / 2 - 25) *
+            _game.scaleFactor,
+      y: _game.player.pos.y - 12 * _game.scaleFactor
+    };
+
+    _game.cv.fillStyle = '#666';
+    _game.cv.fillRect(_health.x - 1,
+                      _health.y - 1,
+                      50 * _game.scaleFactor + 2,
+                      6 * _game.scaleFactor + 2);
+
+    if (!_blinkCount) {
+      _blinkCount = _game.fps;
+    }
+
+    if (_game.player.health <= 25) {
+      // Blink healthbar
+      _blinkCount -= 1;
+
+      if (_blinkCount < _game.fps / 2) {
+        return;
+      }
+    }
+
+    _game.cv.fillStyle = _game.player.color;
+    _game.cv.fillRect(_health.x,
+                      _health.y,
+                      50 * _game.player.health / 100 * _game.scaleFactor,
+                      6 * _game.scaleFactor);
+  };
 
   Player.prototype.draw = function() {
     if (_game.player.health <= 0) {
       return;
     }
-
-    _game.player.health -= (1 / _game.fps) / (this.degradationTime / 100);
 
     _game.cv.drawImage(
       _game.player.avatar,
@@ -45,17 +92,7 @@
       _game.player.frame.height * _game.scaleFactor
     );
 
-    _game.cv.fillStyle = '#666';
-    _game.cv.fillRect(_game.player.pos.x - 9 * _game.scaleFactor - 1,
-                      _game.player.pos.y - 13 * _game.scaleFactor - 1,
-                      50 * _game.scaleFactor + 2,
-                      6 * _game.scaleFactor + 2);
-
-    _game.cv.fillStyle = _game.player.color;
-    _game.cv.fillRect((_game.player.pos.x) - (9 * _game.scaleFactor),
-                      _game.player.pos.y - (13 * _game.scaleFactor),
-                      50 * _game.player.health / 100 * _game.scaleFactor,
-                      6 * _game.scaleFactor);
+    this.drawHealth();
 
     if (_game.player.animate === 'walk') {
       this.nextFrame();
