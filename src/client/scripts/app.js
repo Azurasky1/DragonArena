@@ -18,13 +18,13 @@
   var now;
   var then;
   var elapsed;
-  var fps = 25;
+  var fps = 30;
 
   function updateEverythingThenDraw() {
     app.modules.Board.drawGrid();
     app.modules.Player.draw();
-    app.modules.Keyboard.listenKeyboard();
     app.modules.Projectiles.draw();
+    app.modules.Keyboard.listenKeyboard();
   }
 
   function animate() {

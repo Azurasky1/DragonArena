@@ -37,7 +37,7 @@
   Keyboard.prototype.keyUp = function(e) {
     if (this.shoot &&
         e.keyCode === this.keys.KEY_SPACE) {
-      this.shoot = !this.shoot;
+      this.shoot = false;
     }
 
     if (e.keyCode !== _key) {
@@ -51,7 +51,8 @@
   Keyboard.prototype.keyDwn = function(e) {
     var key = e.keyCode || e.which;
 
-    if (key === this.keys.KEY_SPACE) {
+    if (key === this.keys.KEY_SPACE &&
+        !this.shoot) {
       this.shoot = true;
     }
 
@@ -67,9 +68,18 @@
   };
 
   Keyboard.prototype.listenKeyboard = function() {
-    if (this.shoot) {
-      modules.Player.shoot();
+    if (this.shoot === true) {
+      this.shoot = 2;
+      modules.Projectiles.new(_game.cv,
+                              _game.player.pos.x,
+                              _game.player.pos.y,
+                              _game.player.frame.width,
+                              _game.player.frame.height,
+                              _game.player.frame.direction,
+                              10);
+      _log('Projectiles actives: ' + modules.Projectiles.getActive());
     }
+
 
     switch (_key) {
       case this.keys.KEY_DOWN:

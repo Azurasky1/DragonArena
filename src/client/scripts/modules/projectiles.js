@@ -14,23 +14,25 @@
 (function(modules) {
   'use strict';
 
-  // Private scope
+  // Public scope
 
-  function Projectile(cv, x, y, width, height, direction) {
+  function Projectile(cv, x, y, width, height, direction, speed) {
     this.cv = cv;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.direction = direction;
+    this.speed = speed;
   }
 
   Projectile.prototype.draw = function() {
-    // this.cv.clearRect(this.x, this.y,
-                //  50, 10);
+    this.x += this.speed;
     this.cv.fillStyle = '#000';
-    this.cv.fillRect(this.x, this.y,
-                     15, 5);
+    this.cv.fillRect(this.x + this.width / 2,
+                     this.y + this.height / 2,
+                     8,
+                     3);
   };
 
   // Public scope
@@ -41,9 +43,9 @@
   modules.Projectiles = (function() {
     return {
       projectiles: [],
-      new: function(cv, x, y, width, height, direction) {
+      new: function(cv, x, y, width, height, direction, speed) {
         this.projectiles.push(
-          new Projectile(cv, x, y, width, height, direction));
+          new Projectile(cv, x, y, width, height, direction, speed));
       },
 
       getActive: function() {

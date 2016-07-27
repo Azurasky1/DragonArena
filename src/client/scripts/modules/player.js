@@ -29,17 +29,6 @@
     this.degradationTime = 120;
   }
 
-  Player.prototype.shoot = function() {
-    modules.Projectiles.new(_game.cv,
-                            _game.player.pos.x,
-                            _game.player.pos.y,
-                            _game.player.frame.width,
-                            _game.player.frame.height,
-                            _game.player.frame.direction);
-
-    _log('Projectiles actives: ' + modules.Projectiles.getActive());
-  };
-
   Player.prototype.drawHealth = function() {
     _game.player.health -= (1 / _game.fps) / (this.degradationTime / 100);
 
@@ -75,6 +64,39 @@
                       6 * _game.scaleFactor);
   };
 
+  Player.prototype.nextFrame = function() {
+    if (_game.player.tick > 0) {
+      _game.player.tick -= 1;
+      return;
+    }
+
+    _game.player.tick = _game.player.ticks;
+
+    var dir = _game.player.frame.direction;
+
+    switch (dir) {
+      case 0:
+        _game.player.pos.y += 3;
+        break;
+      case 1:
+        _game.player.pos.x -= 3;
+        break;
+      case 2:
+        _game.player.pos.x += 3;
+        break;
+      case 3:
+        _game.player.pos.y -= 3;
+        break;
+      default:
+    }
+
+    if (_game.player.frame.current < _game.player.frame.total - 1) {
+      _game.player.frame.current += 1;
+    } else {
+      _game.player.frame.current = 0;
+    }
+  };
+
   Player.prototype.draw = function() {
     if (_game.player.health <= 0) {
       return;
@@ -96,21 +118,6 @@
 
     if (_game.player.animate === 'walk') {
       this.nextFrame();
-    }
-  };
-
-  Player.prototype.nextFrame = function() {
-    if (_game.player.tick > 0) {
-      _game.player.tick -= 1;
-      return;
-    }
-
-    _game.player.tick = _game.player.ticks;
-
-    if (_game.player.frame.current < _game.player.frame.total - 1) {
-      _game.player.frame.current += 1;
-    } else {
-      _game.player.frame.current = 0;
     }
   };
 
