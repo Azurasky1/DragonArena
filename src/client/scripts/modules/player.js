@@ -44,6 +44,8 @@
                       50 * _game.scaleFactor + 2,
                       6 * _game.scaleFactor + 2);
 
+// would this work with 'use strict'?
+// what if blinkCount was not declared above?
     if (!_blinkCount) {
       _blinkCount = _game.fps;
     }
@@ -65,6 +67,8 @@
   };
 
   Player.prototype.nextFrame = function() {
+
+    // what is the purpose of having these ticks?
     if (_game.player.tick > 0) {
       _game.player.tick -= 1;
       return;
@@ -172,6 +176,7 @@
     _game.player.avatar.onload = function() {
       _log('Player ready');
       document.dispatchEvent(event);
+      _game.bodies.push(_game.player);
     };
   };
 

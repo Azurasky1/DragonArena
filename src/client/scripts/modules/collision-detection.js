@@ -14,7 +14,8 @@
 (function(modules) {
   'use strict';
 
-  var module = {};
+var _game;
+var module = {};
 
   module.collisionDetection = function(body1, body2) {
     return ((body1 === body2) ||
@@ -28,8 +29,11 @@
     return this.bodies.filter(function(b2) {
       collisionDetection(b1, b2);
     }.length === 0);
+    console.log('body 1:' + b1 + "body 2" + b2);
   };
 
+
+/*
   module.isColliding = function() {
     for (var i = 0; i < bodies.length; i++) {
       if (bodies[i] instanceof Projectile) {
@@ -43,16 +47,8 @@
       }
     }
   };
+*/
 
-  module.updateBodies = function() {
-    var newBodies = bodies.filter(this.isNotColliding);
-
-    bodies = newBodies;
-
-    for (var i = 0; i < bodies.length; i++) {
-      bodies[i].update;
-    }
-  };
 
   modules.collisionDetection = module;
   window.$modules = modules;

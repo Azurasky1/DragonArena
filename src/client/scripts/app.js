@@ -20,26 +20,6 @@
   var elapsed;
   var fps = 30;
 
-  function updateEverythingThenDraw() {
-    app.modules.Board.drawGrid();
-    app.modules.Player.draw();
-    app.modules.Projectiles.draw();
-    app.modules.Keyboard.listenKeyboard();
-  }
-
-  function animate() {
-    requestAnimationFrame(animate);
-
-    now = Date.now();
-    elapsed = now - then;
-
-    if (elapsed > fpsInterval) {
-      then = now - (elapsed % fpsInterval);
-
-      updateEverythingThenDraw();
-    }
-  }
-
   // app core function
   function App() {
     var self = this;
@@ -85,7 +65,9 @@
     _log('Preparing the player...');
 
     var player = Math.floor(Math.random() * 8 + 1);
+    var enemy = {};
     _log('using player avatar #' + player);
+    _log('Preparing the dragon...')
 
     var playersInfo = [{
       width: 128,
@@ -113,13 +95,58 @@
       height: 192
     }];
 
+    App.prototype.update = function () {
+      var newBodies = bodies.filter(window.collisionDetection.isColliding);
+
+      app.game.bodies = newBodies;
+
+/*
+      for (var i = 0; i < bodies.length; i++) {
+        // call all individual update functions
+        bodies[i].update;
+      }
+*/
+    }
+
     app.modules.Player.init(app.game,
       '/images/players/player_00' + player + '.png', {
         frames: 4,
         width: playersInfo[player - 1].width,
         height: playersInfo[player - 1].height
       });
-  };
+
+
+  app.modules.Enemy.init(app.game,
+    '/images/dragons/dragon.png', {
+      frames: 10,
+      width: (750 / 10),
+      height: (560 / 8)
+
+    });
+
+};
+
+  function updateEverythingThenDraw() {
+    app.modules.Board.drawGrid();
+    app.modules.Player.draw();
+    app.modules.Enemy.draw();
+    app.modules.Projectiles.draw();
+    app.update();
+    app.modules.Keyboard.listenKeyboard();
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    now = Date.now();
+    elapsed = now - then;
+
+    if (elapsed > fpsInterval) {
+      then = now - (elapsed % fpsInterval);
+
+      updateEverythingThenDraw();
+    }
+  }
 
   function ready() {
     window.removeEventListener('load', ready, false);
@@ -131,6 +158,10 @@
     app.game = {
       fps: fps
     };
+
+    app.game.player = {};
+    app.game.enemy = {};
+    app.game.bodies = [];
 
     // Initialize modules
     app.modules.Overlays.init(app.el.overlays, app.game);
