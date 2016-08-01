@@ -61,13 +61,19 @@
     app.modules.Board.init(app.game, app.el.canvas);
   };
 
+  // App.prototype.update = function() {
+  //   var newBodies = bodies.filter(window.collisionDetection.isColliding);
+  //
+  //   app.game.bodies = newBodies;
+  // };
+
   App.prototype.boardReady = function() {
     _log('Preparing the player...');
 
     var player = Math.floor(Math.random() * 8 + 1);
-    var enemy = {};
+
     _log('using player avatar #' + player);
-    _log('Preparing the dragon...')
+    _log('Preparing the dragon...');
 
     var playersInfo = [{
       width: 128,
@@ -95,19 +101,6 @@
       height: 192
     }];
 
-    App.prototype.update = function () {
-      var newBodies = bodies.filter(window.collisionDetection.isColliding);
-
-      app.game.bodies = newBodies;
-
-/*
-      for (var i = 0; i < bodies.length; i++) {
-        // call all individual update functions
-        bodies[i].update;
-      }
-*/
-    }
-
     app.modules.Player.init(app.game,
       '/images/players/player_00' + player + '.png', {
         frames: 4,
@@ -115,23 +108,20 @@
         height: playersInfo[player - 1].height
       });
 
-
-  app.modules.Enemy.init(app.game,
-    '/images/dragons/dragon.png', {
-      frames: 10,
-      width: (750 / 10),
-      height: (560 / 8)
-
-    });
-
-};
+    app.modules.Enemy.init(app.game,
+      '/images/dragons/dragon.png', {
+        frames: 10,
+        width: 750,
+        height: 560
+      });
+  };
 
   function updateEverythingThenDraw() {
     app.modules.Board.drawGrid();
     app.modules.Player.draw();
     app.modules.Enemy.draw();
     app.modules.Projectiles.draw();
-    app.update();
+    // app.update();
     app.modules.Keyboard.listenKeyboard();
   }
 
@@ -152,7 +142,7 @@
     window.removeEventListener('load', ready, false);
 
     // Create an instance of the app
-    app = new App();
+    app = window.$app = new App();
 
     // Make sure the game Object is empty before starting a new game
     app.game = {

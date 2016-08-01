@@ -17,7 +17,6 @@
   // Private scope
 
   var _game;
-  var module = {};
 
   // Public scope
 
@@ -25,7 +24,7 @@
     this.degradationTime = 120;
   }
 
-  Enemy.prototype.draw = function () {
+  Enemy.prototype.draw = function() {
     _game.cv.drawImage(
       _game.enemy.avatar,
       _game.enemy.frame.width * _game.enemy.frame.current,
@@ -38,12 +37,10 @@
       _game.enemy.frame.height * _game.scaleFactor
     );
 
-    this.drawHealth();
-
-  }
+    // this.drawHealth();
+  };
 
   Enemy.prototype.nextFrame = function() {
-
     var dir = this.frame.direction;
 
     switch (dir) {
@@ -95,13 +92,11 @@
 
   Enemy.prototype.init = function(game, image, enemyInfo) {
     _game = game;
-    console.log(_game);
 
     _game.enemy.avatar = new Image();
     _game.enemy.avatar.src = image;
-    console.log(_game.enemy.avatar.src);
 
-  _game.enemy.pos = {
+    _game.enemy.pos = {
       x: Math.floor((Math.random() * 600) + 100) * _game.scaleFactor,
       y: Math.floor((Math.random() * 400) + 100) * _game.scaleFactor
     };
@@ -111,7 +106,7 @@
       y: 0
     };
 
-  _game.enemy.frame = {
+    _game.enemy.frame = {
       current: 0,
       direction: Math.floor((Math.random() * 3)),
       total: enemyInfo.frames,
@@ -126,10 +121,14 @@
     };
 
     _game.enemy.speed = .05;
-    _game.enemy.avatar = null;
-    _game.bodies.push(_game.enemy);
 
-  }
+    /* Push the enemy inside the bodies array,
+       once the avatar image has been loaded. */
+    _game.enemy.avatar.onload = function() {
+      _log('Enemy ready');
+      _game.bodies.push(_game.enemy);
+    };
+  };
 
   modules.Enemy = new Enemy();
   window.$modules = modules;
