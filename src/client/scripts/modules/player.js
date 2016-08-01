@@ -65,14 +65,17 @@
   };
 
   Player.prototype.nextFrame = function() {
+    /* Ticks makes sure the player animation is rendered
+       every 2 tick of the requestAnimationFrame to slow down
+       the player animation */
     if (_game.player.tick > 0) {
       _game.player.tick -= 1;
       return;
     }
 
-    _game.player.tick = _game.player.ticks;
-
     var dir = _game.player.frame.direction;
+
+    _game.player.tick = _game.player.ticks;
 
     switch (dir) {
       case 0:
@@ -87,7 +90,7 @@
       case 3:
         _game.player.pos.y -= 3;
         break;
-      default:
+      default: break;
     }
 
     if (_game.player.frame.current < _game.player.frame.total - 1) {
@@ -172,6 +175,7 @@
     _game.player.avatar.onload = function() {
       _log('Player ready');
       document.dispatchEvent(event);
+      _game.bodies.push(_game.player);
     };
   };
 

@@ -20,26 +20,6 @@
   var elapsed;
   var fps = 30;
 
-  function updateEverythingThenDraw() {
-    app.modules.Board.drawGrid();
-    app.modules.Player.draw();
-    app.modules.Projectiles.draw();
-    app.modules.Keyboard.listenKeyboard();
-  }
-
-  function animate() {
-    requestAnimationFrame(animate);
-
-    now = Date.now();
-    elapsed = now - then;
-
-    if (elapsed > fpsInterval) {
-      then = now - (elapsed % fpsInterval);
-
-      updateEverythingThenDraw();
-    }
-  }
-
   // app core function
   function App() {
     var self = this;
@@ -81,11 +61,19 @@
     app.modules.Board.init(app.game, app.el.canvas);
   };
 
+  // App.prototype.update = function() {
+  //   var newBodies = bodies.filter(window.collisionDetection.isColliding);
+  //
+  //   app.game.bodies = newBodies;
+  // };
+
   App.prototype.boardReady = function() {
     _log('Preparing the player...');
 
     var player = Math.floor(Math.random() * 8 + 1);
+
     _log('using player avatar #' + player);
+    _log('Preparing the dragon...');
 
     var playersInfo = [{
       width: 128,
@@ -119,18 +107,51 @@
         width: playersInfo[player - 1].width,
         height: playersInfo[player - 1].height
       });
+
+    app.modules.Enemy.init(app.game,
+      '/images/dragons/dragon.png', {
+        frames: 10,
+        width: 750,
+        height: 560
+      });
   };
+
+  function updateEverythingThenDraw() {
+    app.modules.Board.drawGrid();
+    app.modules.Player.draw();
+    app.modules.Enemy.draw();
+    app.modules.Projectiles.draw();
+    // app.update();
+    app.modules.Keyboard.listenKeyboard();
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    now = Date.now();
+    elapsed = now - then;
+
+    if (elapsed > fpsInterval) {
+      then = now - (elapsed % fpsInterval);
+
+      updateEverythingThenDraw();
+    }
+  }
 
   function ready() {
     window.removeEventListener('load', ready, false);
 
     // Create an instance of the app
-    app = new App();
+    app = window.$app = new App();
 
     // Make sure the game Object is empty before starting a new game
     app.game = {
       fps: fps
     };
+
+    app.game.player = {};
+    app.game.enemy = {};
+    app.game.bodies = [];
 
     // Initialize modules
     app.modules.Overlays.init(app.el.overlays, app.game);

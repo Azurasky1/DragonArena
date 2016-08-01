@@ -77,7 +77,7 @@
                               _game.player.frame.height,
                               _game.player.frame.direction,
                               10);
-      _log('Projectiles actives: ' + modules.Projectiles.getActive());
+      _log('Projectiles active: ' + modules.Projectiles.getActive());
     }
 
 

@@ -20,40 +20,115 @@
 
   // Public scope
 
-  function Enemy(game, totalHealth, currentHealth) {
-    _game = game;
+  function Enemy() {
+    this.degradationTime = 120;
+  }
 
+  Enemy.prototype.draw = function() {
+    _game.cv.drawImage(
+      _game.enemy.avatar,
+      _game.enemy.frame.width * _game.enemy.frame.current,
+      _game.enemy.frame.direction * _game.enemy.frame.height,
+      _game.enemy.frame.width, _game.enemy.frame.height,
+       // centered on canvass
+      _game.enemy.pos.x, _game.enemy.pos.y,
+      // image size to draw
+      _game.enemy.frame.width * _game.scaleFactor,
+      _game.enemy.frame.height * _game.scaleFactor
+    );
+
+    // this.drawHealth();
+  };
+
+  Enemy.prototype.nextFrame = function() {
+    var dir = this.frame.direction;
+
+    switch (dir) {
+      case 0:
+        this.pos.y += 3;
+        break;
+      case 1:
+        this.pos.x -= 3;
+        break;
+      case 2:
+        this.pos.x += 3;
+        break;
+      case 3:
+        this.pos.y -= 3;
+        break;
+      default:
+    }
+
+    if (this.frame.current < this.frame.total - 1) {
+      this.enemy.frame.current += 1;
+    } else {
+      this.enemy.frame.current = 0;
+    }
+  };
+
+  Enemy.prototype.drawHealth = function() {
+    // no need for a formula so needlessly complex
+    // _game.enemy.health -= (1 / _game.fps) / (this.degradationTime / 100);
+
+    // position of health bar
     this.health = {
-      total: totalHealth,
-      current: currentHealth,
-      percent: (currentHealth / totalHealth) * 100
+      x: (this.pos.x + this.frame.width / 2 - 25) *
+            _game.scaleFactor,
+      y: this.pos.y - 12 * _game.scaleFactor
     };
 
-    this.animation = {
+    _game.cv.fillStyle = '#666';
+    _game.cv.fillRect(_health.x - 1,
+                      _health.y - 1,
+                      50 * _game.scaleFactor + 2,
+                      6 * _game.scaleFactor + 2);
+
+    _game.cv.fillStyle = _game.player.color;
+    _game.cv.fillRect(_health.x,
+                      _health.y,
+                      50 * _game.player.health / 100 * _game.scaleFactor,
+                      6 * _game.scaleFactor);
+  };
+
+  Enemy.prototype.init = function(game, image, enemyInfo) {
+    _game = game;
+
+    _game.enemy.avatar = new Image();
+    _game.enemy.avatar.src = image;
+
+    _game.enemy.pos = {
+      x: Math.floor((Math.random() * 600) + 100) * _game.scaleFactor,
+      y: Math.floor((Math.random() * 400) + 100) * _game.scaleFactor
+    };
+
+    _game.enemy.animation = {
       x: 0,
       y: 0
     };
 
-    this.direction = {
-      facing: '',
-      north: 0,
-      south: 0,
-      east: 0,
-      west: 0,
-      northEast: 0,
-      northWest: 0,
-      southEast: 0,
-      southWest: 0
+    _game.enemy.frame = {
+      current: 0,
+      direction: Math.floor((Math.random() * 3)),
+      total: enemyInfo.frames,
+      width: (enemyInfo.width / enemyInfo.frames),
+      height: (enemyInfo.height / enemyInfo.frames)
     };
 
-    this.pos = {
-      x: _game.board.width / 2 - ((500 / 9) / 2),
-      y: _game.board.height / 2 - ((519 / 8) / 2)
+    _game.enemy.health = {
+      total: 100,
+      current: 100,
+      percent: 100
     };
 
-    this.speed = .05;
-    this.avatar = null;
-  }
+    _game.enemy.speed = .05;
+
+    /* Push the enemy inside the bodies array,
+       once the avatar image has been loaded. */
+    _game.enemy.avatar.onload = function() {
+      _log('Enemy ready');
+      _game.bodies.push(_game.enemy);
+    };
+  };
 
   modules.Enemy = new Enemy();
   window.$modules = modules;
